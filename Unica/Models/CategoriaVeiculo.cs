@@ -1,11 +1,11 @@
 ﻿using System;
 namespace Unica.Models
 {
-    public class Categoria
+    public class CategoriaVeiculo
     {
         public int? Codigo { get; set; }
         public string Descricao { get; set; }
-        public Categoria()
+        public CategoriaVeiculo()
         {
         }
     }
