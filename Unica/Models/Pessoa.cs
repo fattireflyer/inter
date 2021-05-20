@@ -25,9 +25,6 @@ namespace Unica.Models
         [Display(Name = "Status")]
         [Required(ErrorMessage = "Campo Status obrigatório")]
         public string Status { get; set; }
-
-
-
         public Pessoa()
         {
             
