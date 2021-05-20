@@ -5,6 +5,8 @@ namespace Unica.Data
     {
         public TipoVeiculoData()
         {
+
+            /* */
         }
     }
 }

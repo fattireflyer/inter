@@ -9,45 +9,21 @@ create table pessoas
 (
 	codigo				int				not null	identity,
 	nome				varchar(50)		not null,
-    telefone			varchar(20)		not null,
-    email			    varchar(50)		not null,
+  telefone			varchar(20)		not null,
+  email			    varchar(50)		not null,
+	logradouro		varchar(max)	not null,
+	numero				varchar(5)		not null,
+	complemento		varchar(max)	not null,
+	bairro		varchar(max)	not null,
+	cidade		varchar(max)	not null,
+	estado	  varchar(2)		not null,
+	cep 			varchar(8)		not null,
 	status		        int,
     check(status in (1,2)),
 	primary key(codigo)
 )
 go
 
-create table cidades
-(
-	codigo				int				not null,
-	nome				varchar(100)    not null,
-	sigla_uf			char(02)		not null,
-	primary key (codigo)
-)
-go
-
-create table ceps
-(
-	numero				varchar(20)		not null,
-	cidade_codigo		int				not null,
-	primary key(numero),
-	foreign key(cidade_codigo) references cidades
-)
-go
-
-create table enderecos
-(
-	pessoa_codigo		int				not null,
-	id					int				not null,
-	cep_numero			varchar(20)		not null,
-	logradouro			varchar(200)    not null,
-	numero				varchar(20)		not null,
-	bairro				varchar(100)	not null,
-	primary key (pessoa_codigo, id),
-	foreign key (pessoa_codigo) references pessoas,
-	foreign key (cep_numero)    references ceps
-)
-go
 
 create table clientes 
 (

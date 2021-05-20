@@ -18,7 +18,7 @@ namespace Unica.Data
                             Initial Catalog = bdecommerce;
                             Integrated Security = false;
                             User Id = sa;
-                            Password = A1b2c3d4e5!";
+                            Password = 123456789!";
 
                 DbConnection = new SqlConnection(strConexao);
 
