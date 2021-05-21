@@ -4,7 +4,7 @@ namespace Unica.Models
 {
     public class Pessoa
     {
-        public int? codigo { get; set; }
+        public int? Codigo { get; set; }
 
         [Display(Name="Nome")]
         [Required(ErrorMessage = "Campo Nome obrigatório")]
@@ -22,7 +22,7 @@ namespace Unica.Models
 
         [Display(Name = "Status")]
         [Required(ErrorMessage = "Campo Status obrigatório")]
-        public string Status { get; set; }
+        public StatusPessoa Status { get; set; }
 
 
         [Display(Name = "Logradouro")]
@@ -51,7 +51,7 @@ namespace Unica.Models
 
         [Display(Name = "CEP")]
         [Required(ErrorMessage = "Campo CEP obrigatório")]
-        public string CEP { get; set; }
+        public string Cep { get; set; }
 
         public Pessoa()
         {

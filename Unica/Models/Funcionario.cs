@@ -17,17 +17,17 @@ namespace Unica.Models
 
         [Display(Name = "Cargo")]
         [Required(ErrorMessage = "Campo Cargo obrigatório")]
-        public Cargo cargo { get; set; }
+        public String Cargo { get; set; }
 
         [Display(Name = "Usuário")]
         [Required(ErrorMessage = "Campo Usuário obrigatório")]
-        public string usuario { get; set; }
+        public string Usuario { get; set; }
 
         [Display(Name = "Senha")]
         [DataType(DataType.Password)]
         [Required(ErrorMessage = "Campo Senha obrigatório")]
         [MinLength(6)]
-        public string senha { set; get; }
+        public string Senha { set; get; }
         public Funcionario()
         {
         }
