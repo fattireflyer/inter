@@ -64,9 +64,10 @@ namespace Unica.Data
                         cliente.Bairro      = (string)reader["bairro"];
                         cliente.Cidade      = (string)reader["cidade"];    
                         cliente.Estado      = (string)reader["estado"];
-                        cliente.CEP         = (string)reader["cep"];
+                        cliente.Cep         = (string)reader["cep"];
                         cliente.Cnpj        = (string)reader["cnpj"];
                         cliente.RazaoSocial = (string)reader["razao_social"];
+                        cliente.Status      = (StatusPessoa)reader["status"];
 
                         lista.Add(cliente);
                     }

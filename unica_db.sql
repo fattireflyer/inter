@@ -45,34 +45,6 @@ create table funcionarios
 )
 go
 
-create procedure cadFunc
-(
-	@nome	varchar(50), 
-	@telefone	varchar(20), 
-	@email	varchar(50),
-	@logradouro	varchar(max), 
-	@numero	varchar(5), 
-	@complemento varchar(max),
-	@bairro	varchar(max), 
-	@cidade	varchar(max), 
-	@estado	varchar(2),
-	@cep varchar(8), 
-	@status int, 
-	@cpf varchar(14), 
-	@cargo varchar(max),
-	@salario money, 
-	@usuario varchar(20), 
-	@senha varchar(50) 		
-)
-as
-begin
-	insert into pessoas  
-	values (@nome, @telefone, @email, @logradouro, @numero, @complemento, @bairro,
-					@cidade, @estado, @cep, @status)
-	insert into funcionarios values (@@IDENTITY, @cpf, @cargo, @usuario, @senha)
-end
-go
-
 create table categorias
 (
     codigo              int             not null        primary key identity,
@@ -91,7 +63,8 @@ go
 
 create table veiculos
 (
-    placa               varchar(7)      not null,
+    codigo							int 						not null identity, 
+		placa               varchar(7)      not null,
     descricao           varchar(50)     not null,
     valor_diaria        money           not null,
     lugares             int             not null,
@@ -100,7 +73,7 @@ create table veiculos
     tipo_codigo         int             not null,
     status		        int,
     check(status in (1,2)),
-    constraint pk_veiculo       primary key (placa),
+    constraint pk_veiculo       primary key (codigo),
     constraint fk_categoria     foreign key (categoria_codigo)      references categorias,
     constraint fk_tipo          foreign key (tipo_codigo)           references tipos                 
 )
@@ -110,21 +83,21 @@ go
 
 create table contratos
 (
-	id 					int 			not null,
-	valor 				money 			not null,
-	data_inicial		datetime		not null,
-	data_final 			datetime 			null,
-	status		        int,
+	id 						int 					not null,
+	valor 				money 				not null,
+	data_inicial	datetime			not null,
+	data_final 		datetime 					null,
+	status		    int,
     check(status in (1,2,3,4)),
 	contraint pk_contratos		primary key (id)
 )
 
 create table contratos_lp
 (
-	contrato_id 		int 			not null,
-	mensalidade			money 			not null,
-	desconto 			decimal(10,2)	not null,
-	tempo_contrato		int 			not null,
+	contrato_id 		int 					not null,
+	mensalidade			money 				not null,
+	desconto 				decimal(10,2)	not null,
+	tempo_contrato	int 					not null,
 	constraint pk_conttratos_lp	primary key (contrato_id),
 	constraint fk_contrato_id 	foreign key (contrato_id)			references contratos
 )
@@ -139,13 +112,7 @@ create table reservas
 	constraint fk_veiculo_placa foreign key (veiculo_placa)			references veiculos
 )
 
-
-
-/*
-
-PROCEDURES
-
- */
+/*	PROCEDURES */
 
 -- Cadastrar Cliente --
 
@@ -204,7 +171,6 @@ begin
 	where pessoa_codigo = @codigo
 end
 go
-
 -- desativar pessoa --
 create procedure deactivatePes
 (
@@ -217,9 +183,7 @@ begin
 	where codigo = @codigo
 end
 go
-
 -- cadastrar funcionario --
-
 go
 create procedure cadFunc
 (
@@ -248,8 +212,6 @@ begin
 	insert into funcionarios values (@@IDENTITY, @cpf, @cargo, @usuario, @senha)
 end
 go
-
-
 -- alterar funcionario
 go
 create procedure altFunc
@@ -283,17 +245,48 @@ begin
 	where pessoa_codigo = @codigo
 end
 go
+-- Cadastrar Veículo
+create procedure cadVei
+(
+	@placa               varchar(7),
+  @descricao           varchar(50),
+  @valor_diaria        money,
+  @lugares             int,
+  @carga               int,
+  @categoria_codigo    int,
+  @tipo_codigo         int,
+  @status		        	 int
+)
+as
+begin 
+		insert into veiculos 
+		values 
+				(@placa, @descricao, @valor_diaria, @lugares, @carga, @categoria_codigo, @status)
+end 
+go
+-- Alterar Veículo
+go 
+create procedure altVei
+(
+	@codigo 						 int,
+	@placa               varchar(7),
+  @descricao           varchar(50),
+  @valor_diaria        money,
+  @lugares             int,
+  @carga               int,
+  @categoria_codigo    int,
+  @tipo_codigo         int,
+  @status		        	 int
+)
+as 
+begin 
+	update veiculos set placa = @placa, descricao = @descricao, valor_diaria = @valor_diaria,
+	lugares = @lugares, carga = @carga, categoria_codigo = @categoria_codigo, tipo_codigo = @tipo_codigo, status = @status
+	where codigo = @codigo; 
+end 
+go 
 
-
-
-
-
-/*
-
-VIEWS
-
-*/
-
+/* VIEWS */
 go 
 create view v_clientes as 
 	select p.*, c.cnpj, c.razao_social 
@@ -302,12 +295,21 @@ create view v_clientes as
 		ORDER BY p.nome
 go
 
-
-go create view v_funcionarios AS
+go 
+create view v_funcionarios AS
 	select p.*, f.cpf, f.cargo, f.usuario, f.senha 
 		from pessoas p 
 		INNER JOIN funcionarios f ON  f.pessoa_codigo = p.codigo
 		ORDER BY p.nome
 go
 
+go 
+create view v_veiculos as 
+	select v.*, c.descricao, t.descricao
+	from veiculos v 
+	inner join categorias c
+	ON v.categoria_codigo = c.codigo
+	inner join tipos
+	ON v.tipo_codigo = t.codigo
+go
 
