@@ -5,8 +5,8 @@ namespace Unica.Models
     public class Cliente : Pessoa
     {
 
-        [Display(Name = "CEP")]
-        [Required(ErrorMessage = "Campo CEP obrigatório")]
+        [Display(Name = "CNPJ")]
+        [Required(ErrorMessage = "Campo CNPJ obrigatório")]
         public string Cnpj { get; set; }
 
 

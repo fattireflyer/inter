@@ -14,7 +14,17 @@ namespace Unica.Data
 
             sqlCommand.Connection = base.DbConnection;
 
-            sqlCommand.CommandText = @"INSERT INTO pessoas VALUES (@ ";
+            sqlCommand.CommandText = @"Exec cadCli @nome, @telefone, @email, @logradouro, @numero, @complemento, @bairro,
+					@cidade, @estado, @cep, @status,  @cnpj, @razao_social" ;
+
+
+            sqlCommand.Parameters.AddWithValue("@nome", cliente.Nome);        
+
+            sqlCommand.ExecuteNonQuery();
+
+
+        }
+
 
 
         }

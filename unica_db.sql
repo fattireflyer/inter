@@ -4,56 +4,112 @@ go
 use unica_db
 go
 
-
 create table pessoas
 (
-	codigo				int				not null	identity,
-	nome				varchar(50)		not null,
+	codigo				int						not null	identity primary key,
+	nome					varchar(50)		not null,
   telefone			varchar(20)		not null,
-  email			    varchar(50)		not null,
+  email					varchar(50)		not null,
 	logradouro		varchar(max)	not null,
 	numero				varchar(5)		not null,
-	complemento		varchar(max)	not null,
-	bairro		varchar(max)	not null,
-	cidade		varchar(max)	not null,
-	estado	  varchar(2)		not null,
-	cep 			varchar(8)		not null,
-	status		        int,
-    check(status in (1,2)),
-	primary key(codigo)
+	complemento		varchar(max)			null,
+	bairro				varchar(max)	not null,
+	cidade				varchar(max)	not null,
+	estado	  		varchar(2)		not null,
+	cep 					varchar(8)		not null,
+	status		    int,
+  check(status in (1,2))
 )
 go
 
-
 create table clientes 
 (
-	pessoa_codigo	    int			    not null,
-    cnpj                varchar(20)     not null,
-    razao_social        varchar(150)    not null,
+	pessoa_codigo	 int		 		    not null,
+  cnpj           varchar(20)    not null,
+  razao_social   varchar(150)   not null,
 	constraint pk_cliente		primary key (pessoa_codigo),
 	constraint fk_pessoa		foreign key (pessoa_codigo)		   references pessoas
 )
 go
 
-create table cargos
+-- Cadastrar Cliente --
+
+go
+create procedure cadCli
 (
-    codigo              int             not null primary key identity,
-    descricao           varchar(20)     not null
+	@nome					varchar(50), 
+	@telefone			varchar(20), 
+	@email				varchar(50),
+	@logradouro		varchar(max), 
+	@numero				varchar(5), 
+	@complemento 	varchar(max),
+	@bairro				varchar(max), 
+	@cidade				varchar(max), 
+	@estado				varchar(2),
+	@cep 					varchar(8), 
+	@status 			int, 
+	@cnpj 				varchar(20), 
+	@razao_social varchar(150)		
 )
+as
+begin
+	insert into pessoas  
+	values (@nome, @telefone, @email, @logradouro, @numero, @complemento, @bairro,
+					@cidade, @estado, @cep, @status)
+	insert into clientes values (@@IDENTITY, @cnpj, @razao_social)
+end
+go
+
+
+go 
+create procedure selectAllCli
+as 
+begin
+	select p.*, c.cnpj, c.razao_social 
+	from pessoas p INNER JOIN clientes c 
+	ON  c.pessoa_codigo = p.codigo
+end 
 go
 
 create table funcionarios 
 (
-	pessoa_codigo	    int			    not null,
-    cpf                 varchar(14)     not null unique, 
-    salario             money           not null,
-    cargo_codigo        int             not null,
-    usuario             varchar(20)     not null,
-    senha               varchar(50)     not null,                         
+	pessoa_codigo	    	int			    		not null,
+  cpf                 varchar(14)     not null unique, 
+  salario             money           not null,
+  cargo        				varchar(max)    not null,
+  usuario             varchar(20)     not null,
+  senha               varchar(50)     not null,                         
 	constraint pk_funcionario	primary key (pessoa_codigo),
-	constraint fk_pessoa		foreign key (pessoa_codigo)		   references pessoas,
-    constraint fk_cargo 		foreign key (cargo_codigo)		   references cargos
+	constraint fk_pessoa		foreign key (pessoa_codigo)		   references pessoas
 )
+go
+
+create procedure cadCli
+(
+	@nome	varchar(50), 
+	@telefone	varchar(20), 
+	@email	varchar(50),
+	@logradouro	varchar(max), 
+	@numero	varchar(5), 
+	@complemento varchar(max),
+	@bairro	varchar(max), 
+	@cidade	varchar(max), 
+	@estado	varchar(2),
+	@cep varchar(8), 
+	@status int, 
+	@cpf varchar(14), 
+	@cargo varchar(max),
+	@salario money, 
+	@usuario varchar(20), 
+	@senha varchar(50) 		
+)
+as
+begin
+	insert into pessoas  
+	values (@nome, @telefone, @email, @logradouro, @numero, @complemento, @bairro,
+					@cidade, @estado, @cep, @status)
+	insert into funcionarios values (@@IDENTITY, @cpf, @cargo, @usuario, @senha)
+end
 go
 
 create table categorias
@@ -115,7 +171,7 @@ create table contratos_lp
 create table reservas
 (
 	contrato_id			int 			not null,
-	veiculo_placa		varchar 		not null
+	veiculo_placa		varchar 		not null,
 	data_devolucao 		datetime 		not null,
 	constraint pk_reservas		primary key (contrato_id, veiculo_placa),
 	constraint fk_contrato_id	foreign key (contrato_id)			references contratos,
