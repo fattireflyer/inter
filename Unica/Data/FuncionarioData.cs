@@ -12,7 +12,6 @@ namespace Unica.Data
         {
 
             SqlCommand sqlCommand = new SqlCommand();
-
             sqlCommand.Connection = base.DbConnection;
 
             sqlCommand.CommandText = 
@@ -92,27 +91,21 @@ namespace Unica.Data
 
         public Funcionario ReadById(int id){
             string IdString = Convert.ToString(id);
-            return Read(IdString);
+            return Read("id",IdString);
         }
         
         public Funcionario ReadByCnpj(string cpf){
-            return Read(cpf);
+            return Read("cpf",cpf);
         }
 
 
-        private Funcionario Read (string stringBusca)
+        private Funcionario Read (string tipo,  string stringBusca)
         {
             Funcionario funcionario = null;
-
-            SqlCommand sqlCommand = new SqlCommand();
-            sqlCommand.Connection = base.DbConnection;
-
-
-        
-            sqlCommand.CommandText = @"SELECT *  from v_funcionarios WHERE codigo = @"+stringBusca;
-            sqlCommand.Parameters.AddWithValue("@"+stringBusca, stringBusca);
+            string cmdTxt = new StringBuilder("SELECT *  from v_funcionarios WHERE codigo = @").Append(tipo).ToString();
+            SqlCommand sqlCommand = new SqlCommand(cmdTxt, base.DbConnection );
+            sqlCommand.Parameters.AddWithValue("@"+tipo, stringBusca);
             
-
             SqlDataReader reader = sqlCommand.ExecuteReader();
 
             if(reader.Read())
