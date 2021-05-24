@@ -14,13 +14,13 @@ namespace Unica.Models
 
         public int Lugares { get; set; }
 
-        public int? Carga { get; set; }
+        public float? Carga { get; set; }
 
         public CategoriaVeiculo Categoria { get; set; }
 
         public TipoVeiculo Tipo { get; set; }
 
-        public StatusVeiculo status;
+        public StatusVeiculo Status;
 
         public Veiculo()
         {
