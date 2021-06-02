@@ -13,15 +13,15 @@ namespace Unica.Data
         {
             SqlCommand sqlCommand = new SqlCommand();
             sqlCommand.Connection = base.DbConnection;
-            sqlCommand.CommandText = @"EXEC cadVei @placa, @descricao, @valor_diaria, @lugares, @carga, @categoria_codigo, @status";
+            sqlCommand.CommandText = @"EXEC cadVei @placa, @descricao, @valor_diaria, @lugares, @carga, @categoria_id, @status";
 
             sqlCommand.Parameters.AddWithValue("@placa", veiculo.Placa);
             sqlCommand.Parameters.AddWithValue("@descricao", veiculo.Descricao);
             sqlCommand.Parameters.AddWithValue("@valor_diaria", veiculo.ValorDiaria);
             sqlCommand.Parameters.AddWithValue("@lugares", veiculo.Lugares);
             sqlCommand.Parameters.AddWithValue("@carga", veiculo.Carga);
-            sqlCommand.Parameters.AddWithValue("@categoria_codigo", veiculo.Categoria.Codigo);
-            sqlCommand.Parameters.AddWithValue("@tipo_codigo", veiculo.Tipo.Codigo);
+            sqlCommand.Parameters.AddWithValue("@categoria_id", veiculo.Categoria.Id);
+            sqlCommand.Parameters.AddWithValue("@tipo_id", veiculo.Tipo.Id);
             sqlCommand.Parameters.AddWithValue("@status", veiculo.Status);
 
             sqlCommand.ExecuteNonQuery();
@@ -42,14 +42,14 @@ namespace Unica.Data
                     {
                         Veiculo veiculo             = new Veiculo();
                         veiculo.Placa               = (string)reader["placa"];
-                        veiculo.Codigo              = (int)reader["codigo"];
+                        veiculo.Id              = (int)reader["id"];
                         veiculo.Descricao           = (string)reader["descricao"];
                         veiculo.ValorDiaria         = (double)reader["valor_diaria"];
                         veiculo.Lugares             = (int)reader["lugares"];
                         veiculo.Carga               = (float)reader["carga"];
-                        veiculo.Categoria.Codigo    = (int)reader["categoria_codigo"];
+                        veiculo.Categoria.Id    = (int)reader["categoria_id"];
                         veiculo.Categoria.Descricao = (string)reader["categoria"];
-                        veiculo.Tipo.Codigo         = (int)reader["tipo_codigo"];    
+                        veiculo.Tipo.Id         = (int)reader["tipo_id"];    
                         veiculo.Tipo.Descricao      = (string)reader["tipo"];
                         veiculo.Status              = (StatusVeiculo)reader["status"];
         
@@ -74,9 +74,9 @@ namespace Unica.Data
         }
         
         
-        public Veiculo ReadById(int codigo){
-            string codigoString = Convert.ToString(codigo);
-            return Read("codigo", codigoString);
+        public Veiculo ReadById(int id){
+            string idString = Convert.ToString(id);
+            return Read("id", idString);
         }
         
         public Veiculo ReadbyPlaca (string placa){return Read("placa",placa);}
@@ -85,7 +85,7 @@ namespace Unica.Data
         {
             Veiculo veiculo = null;
 
-            string cmdTxt = new StringBuilder("SELECT *  from v_veiculos WHERE codigo = @").Append(tipo).ToString();
+            string cmdTxt = new StringBuilder("SELECT *  from v_veiculos WHERE id = @").Append(tipo).ToString();
             SqlCommand sqlCommand = new SqlCommand(cmdTxt, base.DbConnection );
             sqlCommand.Parameters.AddWithValue("@"+tipo, stringBusca);
             
@@ -94,15 +94,15 @@ namespace Unica.Data
             if(reader.Read())
             {
                 veiculo = new Veiculo();
-                veiculo.Codigo              = (int)reader["codigo"];
+                veiculo.Id              = (int)reader["id"];
                 veiculo.Placa               = (string)reader["placa"];
                 veiculo.Descricao           = (string)reader["descricao"];
                 veiculo.ValorDiaria         = (double)reader["valor_diaria"];
                 veiculo.Lugares             = (int)reader["lugares"];
                 veiculo.Carga               = (float)reader["carga"];
-                veiculo.Categoria.Codigo    = (int)reader["categoria_codigo"];
+                veiculo.Categoria.Id    = (int)reader["categoria_id"];
                 veiculo.Categoria.Descricao = (string)reader["categoria"];
-                veiculo.Tipo.Codigo         = (int)reader["tipo_codigo"];
+                veiculo.Tipo.Id         = (int)reader["tipo_id"];
                 veiculo.Tipo.Descricao      = (string)reader["ipo"];
                 veiculo.Status              = (StatusVeiculo)reader["status"];
             }    
@@ -115,25 +115,25 @@ namespace Unica.Data
             sqlCommand.Connection = base.DbConnection;
 
             sqlCommand.CommandText = 
-            @"EXEC altVei  @placa, @descricao,  @valor_diaria, @lugares, @carga, @categoria_codigo, @tipo_codigo, @status, @codigo; ";
+            @"EXEC altVei  @placa, @descricao,  @valor_diaria, @lugares, @carga, @categoria_id, @tipo_id, @status, @id; ";
 
-            sqlCommand.Parameters.AddWithValue("@codigo", veiculo.Codigo);
+            sqlCommand.Parameters.AddWithValue("@id", veiculo.Id);
             sqlCommand.Parameters.AddWithValue("@placa", veiculo.Placa);
             sqlCommand.Parameters.AddWithValue("@descricao", veiculo.Descricao);
             sqlCommand.Parameters.AddWithValue("@valor_diaria", veiculo.ValorDiaria);
             sqlCommand.Parameters.AddWithValue("@lugares", veiculo.Lugares);
             sqlCommand.Parameters.AddWithValue("@carga", veiculo.Carga);
-            sqlCommand.Parameters.AddWithValue("@categoria_codigo", veiculo.Categoria.Codigo);
-            sqlCommand.Parameters.AddWithValue("@tipo_codigo", veiculo.Tipo.Codigo);
+            sqlCommand.Parameters.AddWithValue("@categoria_id", veiculo.Categoria.Id);
+            sqlCommand.Parameters.AddWithValue("@tipo_id", veiculo.Tipo.Id);
             sqlCommand.Parameters.AddWithValue("@status", veiculo.Status);
             sqlCommand.ExecuteNonQuery();     
         }
-        public void Delete (int codigo)
+        public void Delete (int id)
         {
             SqlCommand sqlCommand = new SqlCommand();
             sqlCommand.Connection = base.DbConnection;
-            sqlCommand.CommandText = @"DELETE FROM veiculos WHERE codigo = @codigo";
-            sqlCommand.Parameters.AddWithValue("@codigo", codigo);
+            sqlCommand.CommandText = @"DELETE FROM veiculos WHERE id = @id";
+            sqlCommand.Parameters.AddWithValue("@id", id);
             sqlCommand.ExecuteNonQuery();
 
 

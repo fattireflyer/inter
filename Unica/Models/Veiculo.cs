@@ -5,7 +5,7 @@ namespace Unica.Models
     public class Veiculo
     {
 
-        public int? Codigo {get; set;}
+        public int? Id {get; set;}
         public string Placa { get; set; }
 
         public string Descricao { get; set; }

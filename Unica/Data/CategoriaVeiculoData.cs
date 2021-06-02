@@ -36,7 +36,7 @@ namespace Unica.Data
                 {
                     CategoriaVeiculo categoria = new CategoriaVeiculo();
 
-                    categoria.Codigo = (int)reader["codigo"];
+                    categoria.Id = (int)reader["id"];
                     categoria.Descricao = (string)reader["descricao"];
 
                     lista.Add(categoria);
@@ -62,18 +62,18 @@ namespace Unica.Data
         {
             SqlCommand sqlCommand  = new SqlCommand();
             sqlCommand.Connection  = base.DbConnection;
-            sqlCommand.CommandText = @"UPDATE categorias SET descricao = @descricao WHERE codigo = @codigo";
-            sqlCommand.Parameters.AddWithValue("@codigo", categoria.Codigo);
+            sqlCommand.CommandText = @"UPDATE categorias SET descricao = @descricao WHERE id = @id";
+            sqlCommand.Parameters.AddWithValue("@id", categoria.Id);
             sqlCommand.Parameters.AddWithValue("@descricao", categoria.Descricao);
             sqlCommand.ExecuteNonQuery();
         }
 
-        public void Delete (int codigo)
+        public void Delete (int id)
         {
             SqlCommand sqlCommand  = new SqlCommand();
             sqlCommand.Connection  = base.DbConnection;
-            sqlCommand.CommandText = @"DELETE FROM categorias WHERE codigo = @codigo";
-            sqlCommand.Parameters.AddWithValue("@codigo", codigo);
+            sqlCommand.CommandText = @"DELETE FROM categorias WHERE id = @id";
+            sqlCommand.Parameters.AddWithValue("@id", id);
             sqlCommand.ExecuteNonQuery();
         }
     }

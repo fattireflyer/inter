@@ -7,8 +7,6 @@ namespace Unica.Models
 
         public double Mensalidade { get; set; }
 
-        public double Desconto { get; set; }
-
         public ContratoLongoPrazo()
         {
             

@@ -4,7 +4,7 @@ namespace Unica.Models
 {
     public class Pessoa
     {
-        public int? Codigo { get; set; }
+        public int? Id { get; set; }
 
         [Display(Name="Nome")]
         [Required(ErrorMessage = "Campo Nome obrigatório")]

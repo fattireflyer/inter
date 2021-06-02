@@ -5,7 +5,7 @@ namespace Unica.Models
 {
     public class TipoVeiculo
     {
-        public int? Codigo { get; set; }
+        public int? Id { get; set; }
 
         [Display(Name="Tipo")]
         [Required(ErrorMessage = "Campo Tipo obrigatório")]

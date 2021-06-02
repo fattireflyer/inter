@@ -54,7 +54,7 @@ namespace Unica.Data
                     while(reader.Read())
                     {
                         Cliente cliente     = new Cliente();
-                        cliente.Codigo      = (int)reader["codigo"];
+                        cliente.Id      = (int)reader["id"];
                         cliente.Nome        = (string)reader["nome"];
                         cliente.Telefone    = (string)reader["telefone"];
                         cliente.Email       = (string)reader["email"];
@@ -109,7 +109,7 @@ namespace Unica.Data
 
 
         
-            sqlCommand.CommandText = @"SELECT *  from v_clientes WHERE codigo = @"+stringBusca;
+            sqlCommand.CommandText = @"SELECT *  from v_clientes WHERE id = @"+stringBusca;
             sqlCommand.Parameters.AddWithValue("@"+stringBusca, stringBusca);
             
 
@@ -118,7 +118,7 @@ namespace Unica.Data
             if(reader.Read())
             {
                 cliente = new Cliente();
-                cliente.Codigo      = (int)reader["codigo"];
+                cliente.Id      = (int)reader["id"];
                 cliente.Nome        = (string)reader["nome"];
                 cliente.Telefone    = (string)reader["telefone"];
                 cliente.Email       = (string)reader["email"];
@@ -128,7 +128,7 @@ namespace Unica.Data
                 cliente.Bairro      = (string)reader["bairro"];
                 cliente.Cidade      = (string)reader["cidade"];    
                 cliente.Estado      = (string)reader["estado"];
-                cliente.CEP         = (string)reader["cep"];
+                cliente.Cep         = (string)reader["cep"];
                 cliente.Cnpj        = (string)reader["cnpj"];
                 cliente.RazaoSocial = (string)reader["razao_social"];
             }    
@@ -141,10 +141,10 @@ namespace Unica.Data
             sqlCommand.Connection = base.DbConnection;
 
             sqlCommand.CommandText = 
-            @"EXEC altCli  @codigo, @nome,  @telefone,  @email,  @logradouro, @numero,  @complemento, 
+            @"EXEC altCli  @id, @nome,  @telefone,  @email,  @logradouro, @numero,  @complemento, 
              @bairro, @cidade,  @estado, @cep,  @status, @cnpj, @razao_social";
 
-            sqlCommand.Parameters.AddWithValue("@codigo", cliente.Codigo);
+            sqlCommand.Parameters.AddWithValue("@id", cliente.Id);
             sqlCommand.Parameters.AddWithValue("@nome", cliente.Nome);
             sqlCommand.Parameters.AddWithValue("@telefone", cliente.Telefone);
             sqlCommand.Parameters.AddWithValue("@email", cliente.Email);
@@ -161,13 +161,13 @@ namespace Unica.Data
 
             sqlCommand.ExecuteNonQuery();     
         }
-        public void Deactivate (int codigo)
+        public void Deactivate (int id)
         {
             SqlCommand sqlCommand = new SqlCommand();
             sqlCommand.Connection = base.DbConnection;
 
-            sqlCommand.CommandText = @" EXEC deactivatePes @codigo";
-            sqlCommand.Parameters.AddWithValue("@codigo", codigo);
+            sqlCommand.CommandText = @" EXEC deactivatePes @id";
+            sqlCommand.Parameters.AddWithValue("@id", id);
             sqlCommand.ExecuteNonQuery();   
         }
     }

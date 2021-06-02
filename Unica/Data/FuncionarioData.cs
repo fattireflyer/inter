@@ -55,7 +55,7 @@ namespace Unica.Data
                     while(reader.Read())
                     {
                         Funcionario funcionario     = new Funcionario();
-                        funcionario.Codigo      = (int)reader["codigo"];
+                        funcionario.Id      = (int)reader["id"];
                         funcionario.Nome        = (string)reader["nome"];
                         funcionario.Telefone    = (string)reader["telefone"];
                         funcionario.Email       = (string)reader["email"];
@@ -102,7 +102,7 @@ namespace Unica.Data
         private Funcionario Read (string tipo,  string stringBusca)
         {
             Funcionario funcionario = null;
-            string cmdTxt = new StringBuilder("SELECT *  from v_funcionarios WHERE codigo = @").Append(tipo).ToString();
+            string cmdTxt = new StringBuilder("SELECT *  from v_funcionarios WHERE id = @").Append(tipo).ToString();
             SqlCommand sqlCommand = new SqlCommand(cmdTxt, base.DbConnection );
             sqlCommand.Parameters.AddWithValue("@"+tipo, stringBusca);
             
@@ -111,7 +111,7 @@ namespace Unica.Data
             if(reader.Read())
             {
                 funcionario = new Funcionario();
-                funcionario.Codigo      = (int)reader["codigo"];
+                funcionario.Id      = (int)reader["id"];
                 funcionario.Nome        = (string)reader["nome"];
                 funcionario.Telefone    = (string)reader["telefone"];
                 funcionario.Email       = (string)reader["email"];
@@ -136,10 +136,10 @@ namespace Unica.Data
             sqlCommand.Connection = base.DbConnection;
 
             sqlCommand.CommandText = 
-            @"EXEC altFunc  @codigo, @nome,  @telefone,  @email,  @logradouro, @numero,  @complemento, 
+            @"EXEC altFunc  @id, @nome,  @telefone,  @email,  @logradouro, @numero,  @complemento, 
              @bairro, @cidade,  @estado, @cep,  @status, @cpf, @cargo";
 
-            sqlCommand.Parameters.AddWithValue("@codigo", funcionario.Codigo);
+            sqlCommand.Parameters.AddWithValue("@id", funcionario.Id);
             sqlCommand.Parameters.AddWithValue("@nome", funcionario.Nome);
             sqlCommand.Parameters.AddWithValue("@telefone", funcionario.Telefone);
             sqlCommand.Parameters.AddWithValue("@email", funcionario.Email);
@@ -158,13 +158,13 @@ namespace Unica.Data
 
             sqlCommand.ExecuteNonQuery();     
         }
-        public void Deactivate (int codigo)
+        public void Deactivate (int id)
         {
             SqlCommand sqlCommand = new SqlCommand();
             sqlCommand.Connection = base.DbConnection;
 
-            sqlCommand.CommandText = @" EXEC deactivatePes @codigo, @status";
-            sqlCommand.Parameters.AddWithValue("@codigo", codigo);
+            sqlCommand.CommandText = @" EXEC deactivatePes @id, @status";
+            sqlCommand.Parameters.AddWithValue("@id", id);
             sqlCommand.Parameters.AddWithValue("@status", 2);
             sqlCommand.ExecuteNonQuery();   
         }
