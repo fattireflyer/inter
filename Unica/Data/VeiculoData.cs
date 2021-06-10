@@ -103,7 +103,7 @@ namespace Unica.Data
                 veiculo.Categoria.Id    = (int)reader["categoria_id"];
                 veiculo.Categoria.Descricao = (string)reader["categoria"];
                 veiculo.Tipo.Id         = (int)reader["tipo_id"];
-                veiculo.Tipo.Descricao      = (string)reader["ipo"];
+                veiculo.Tipo.Descricao      = (string)reader["tipo"];
                 veiculo.Status              = (StatusVeiculo)reader["status"];
             }    
             return veiculo;
