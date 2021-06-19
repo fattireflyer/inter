@@ -12,5 +12,9 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Data\" />
+    <Folder Include="Views\Funcionario\" />
+    <Folder Include="wwwroot\images\" />
+    <Folder Include="Views\Cliente\" />
+    <Folder Include="Views\Veiculo\" />
   </ItemGroup>
 </Project>

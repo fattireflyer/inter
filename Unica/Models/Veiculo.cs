@@ -8,6 +8,8 @@ namespace Unica.Models
         public int? Id {get; set;}
         public string Placa { get; set; }
 
+        public string Marca { get; set; }
+
         public string Descricao { get; set; }
 
         public double ValorDiaria { get; set; }

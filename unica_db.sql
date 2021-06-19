@@ -79,8 +79,6 @@ create table veiculos
 )
 go
 
-
-
 create table contratos
 (
 	id 						int 					not null,
@@ -113,8 +111,13 @@ create table reservas
 	check (status in (0,1)),
 	constraint pk_reservas		primary key (contrato_id, veiculo_placa),
 	constraint fk_contrato_id	foreign key (contrato_id)			references contratos,
-	constraint fk_veiculo_placa foreign key (veiculo_placa)			references veiculos
+	constraint fk_veiculo_placa foreign key (veiculo_placa)	references veiculos
 )
+
+
+
+			 
+
 
 /*	PROCEDURES */
 
@@ -316,4 +319,13 @@ create view v_veiculos as
 	inner join tipos
 	ON v.tipo_id = t.id
 go
+
+go create view v_reservas as 
+select r.contrato_id, r.data_saida, r.data_contratada, r.data_devolucao, r.status,
+		   v.*
+from 	     reservas r 
+inner join v_veiculos v
+on				 r.veiculo_placa = v.placa
+go 
+
 

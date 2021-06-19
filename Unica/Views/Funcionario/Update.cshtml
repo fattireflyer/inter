@@ -1,0 +1,83 @@
+﻿@model Funcionario
+
+<form asp-controller="Funcionario" asp-action="Update" method="POST">
+    <div class="form-row">
+        <div class="form-group col-md-6">
+            <label asp-for="Nome"></label>
+            <input asp-for="Nome" class="form-control" />
+            <span asp-validation-for="Nome"></span>
+        </div>
+        <div class="form-group col-md-3">
+            <label>CPF</label>
+            <input asp-for="Cpf" class="form-control" />
+            <span asp-validation-for="Cpf"></span>
+        </div>
+    </div>
+    <div class="form-row">
+        <div class="form-group col-md-6">
+            <label>Telefone</label>
+            <input asp-for="Telefone" class="form-control" />
+            <span asp-validation-for="Telefone"></span>
+        </div>
+        <div class="form-group col-md-6">
+            <label>Email</label>
+            <input asp-for="Email" class="form-control" />
+            <span asp-validation-for="Email"></span>
+        </div>
+    </div>
+    <div class="form-row">
+        <div class="form-group col-md-4">
+            <label>Bairro</label>
+            <input asp-for="Bairro" class="form-control" />
+            <span asp-validation-for="Bairro"></span>
+        </div>
+
+        <div class="form-group col-md-4">
+            <label>Cidade</label>
+            <input asp-for="Cidade" class="form-control" />
+            <span asp-validation-for="Cidade"></span>
+        </div>
+
+        <div class="form-group col-md-1">
+            <label>Estado</label>
+            <input asp-for="Estado" class="form-control" />
+            <span asp-validation-for="Estado"></span>
+        </div>
+        <div class="form-group col-md-3">
+            <label>CEP</label>
+            <input asp-for="Cep" class="form-control" />
+            <span asp-validation-for="Cep"></span>
+        </div>
+
+    </div>
+    <div class="form-row">
+        <div class="form-group col-md-6">
+            <label>Cargo</label>
+            <input asp-for="Cargo" class="form-control" />
+            <span asp-validation-for="Cargo"></span>
+        </div>
+        <div class="form-group col-md-6">
+            <label>Salário</label>
+            <input asp-for="Salario" class="form-control" />
+            <span asp-validation-for="Salario"></span>
+        </div>
+        <div class="form-group col-md-3">
+            <label>Status</label>
+            <input asp-for="Status" class="form-control" />
+            <span asp-validation-for="Status"></span>
+        </div>
+    </div>
+    <div class="form-row">
+        <div class="form-group col-md-6">
+            <label>Usuário</label>
+            <input asp-for="Usuario" class="form-control" />
+            <span asp-validation-for="Usuario"></span>
+        </div>
+        <div class="form-group col-md-6">
+            <label asp-for="Senha"></label>
+            <input asp-for="Senha" class="form-control" />
+            <span asp-validation-for="Senha"></span>
+        </div>
+    </div>
+    <button type="submit" class="btn btn-primary">Atualizar</button>
+</form>

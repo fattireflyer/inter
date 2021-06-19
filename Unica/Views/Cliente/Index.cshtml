@@ -1,0 +1,40 @@
+﻿@model Cliente
+
+<br/>
+
+@if (@Model == null)
+{
+    <h3>@ViewBag.Mensagem</h3>
+}
+else
+{
+    <h3>@ViewBag.Mensagem @Model.Nome</h3>
+    <table class="table table-hover">
+        <tr>
+            <td>@Model.Id</td>
+            <td>@Model.Nome</td>
+            <td>@Model.Email</td>
+            <td>@Model.Status</td>
+            <td>@Model.Logradouro</td>
+            <td>@Model.Numero</td>
+            <td>@Model.Complemento</td>
+            <td>@Model.Bairro</td>
+            <td>@Model.Cidade</td>
+            <td>@Model.Estado</td>
+            <td>@Model.Cep</td>
+            <td>@Model.Cnpj</td>
+            <td>@Model.RazaoSocial</td>
+            <td>
+                <a class="btn btn-sm btn-danger"
+                   href="/cliente/delete/@Model.Id">
+                    Apagar
+                </a>
+                <a class="btn btn-sm btn-danger"
+                   href="/cliente/update/@Model.Id">
+                    Editar
+                </a>
+            </td>
+        </tr>
+    </table>
+}
+<a class="btn btn-primary" href="/cliente/create">Adicionar</a>

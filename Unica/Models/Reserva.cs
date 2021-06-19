@@ -5,8 +5,9 @@ namespace Unica.Models
     public class Reserva
     {
 
+        
         public int? IdContrato {get; set;}
-        public string Placa { get; set; }
+        public Veiculo Veiculo { get; set; }
 
         public bool Status {get; set;}
 
