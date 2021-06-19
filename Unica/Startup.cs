@@ -50,7 +50,7 @@ namespace Unica
             {
                 endpoints.MapControllerRoute(
                     name: "default",
-                    pattern: "{controller=Veiculo}/{action=Update}/{id?}");
+                    pattern: "{controller=Funcionario}/{action=Login}/{id?}");
             });
         }
     }
