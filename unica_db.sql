@@ -67,7 +67,7 @@ alter table veiculos add marca varchar(max)
 
 create table contratos
 (
-	id 						int 					not null,
+	id 						int 					not null identity,
 	valor_total 	money 				not null,
 	data_inicial	datetime			not null,
 	cliente_id		int 					not null, 
@@ -77,12 +77,13 @@ create table contratos
 	constraint pk_contratos		primary key (id)
 )
 
+
 create table contratos_lp
 (
 	contrato_id 		int 					not null,
 	mensalidade			money 				not null,
 	tempo_contrato	int 					not null,
-	constraint pk_conttratos_lp	primary key (contrato_id),
+	constraint pk_contratos_lp	primary key (contrato_id),
 	constraint fk_contrato_id_lp 	foreign key (contrato_id)			references contratos
 )
 

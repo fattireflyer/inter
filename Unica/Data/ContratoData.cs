@@ -28,33 +28,29 @@ namespace Unica.Data
             sqlCommand.ExecuteNonQuery();
         }
 
-        public List<Veiculo> Read()
+        public List<ContratoViewModel> Read()
         {
-            List<Veiculo> lista = null;
+            List<ContratoViewModel> lista = null;
             try
             {
                 SqlCommand sqlCommand = new SqlCommand();
                 sqlCommand.Connection = base.DbConnection;
-                sqlCommand.CommandText = @"SELECT * FROM v_veiculos";
+                sqlCommand.CommandText = @"select c.*, p.nome from contratos c inner join pessoas p on p.id = c.cliente_id";
                 SqlDataReader reader = sqlCommand.ExecuteReader();
 
-                lista = new List<Veiculo>();
+                lista = new List<ContratoViewModel>();
 
                 while (reader.Read())
                 {
-                    Veiculo veiculo = new Veiculo();
-                    veiculo.Placa = (string)reader["placa"];
-                    veiculo.Id = (int)reader["id"];
-                    veiculo.Descricao = (string)reader["descricao"];
-                    veiculo.Marca = (string)reader["marca"];
-                    veiculo.ValorDiaria = (decimal)reader["valor_diaria"];
-                    veiculo.Lugares = (int)reader["lugares"];
-                    veiculo.Carga = (int)reader["carga"];
-                    veiculo.Categoria = (string)reader["categoria"];
-                    veiculo.Tipo = (string)reader["tipo"];
-                    veiculo.Status = (int)reader["status"];
+                    ContratoViewModel contrato = new ContratoViewModel();
+                    contrato.Id = (int)reader["id"];
+                    contrato.ValorTotal = (decimal)reader["valor_total"];
+                    contrato.DataInicial = (DateTime)reader["data_inicial"];
+                    contrato.DataFinal = (DateTime)reader["data_final"];
+                    contrato.NomeCliente = (string)reader["nome"];
+                    contrato.Status = (int)reader["status"];
 
-                    lista.Add(veiculo);
+                    lista.Add(contrato);
                 }
             }
             catch (SqlException ex)

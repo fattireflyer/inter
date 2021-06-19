@@ -15,7 +15,7 @@ namespace Unica.Controllers
         // GET: /<controller>/
         public IActionResult Index()
         {
-            using (var data = new VeiculoData())
+            using (var data = new ContratoData())
                 return View(data.Read());
         }
 
