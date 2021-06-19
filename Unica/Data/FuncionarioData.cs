@@ -178,7 +178,7 @@ namespace Unica.Data
 
             sqlCommand.CommandText =
             @"EXEC altFunc  @id, @nome,  @telefone,  @email,  @logradouro, @numero,  @complemento, 
-             @bairro, @cidade,  @estado, @cep,  @status, @cpf, @salario, @cargo";
+             @bairro, @cidade,  @estado, @cep,  @status, @cpf, @salario, @cargo, @usuario, @senha";
 
             sqlCommand.Parameters.AddWithValue("@id", funcionario.Id);
             sqlCommand.Parameters.AddWithValue("@nome", funcionario.Nome);
