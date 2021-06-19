@@ -10,12 +10,12 @@ using Unica.Data;
 
 namespace Unica.Controllers
 {
-    public class ClienteController : Controller
+    public class ContratoController : Controller
     {
         // GET: /<controller>/
         public IActionResult Index()
         {
-            using (var data = new ClienteData())
+            using (var data = new VeiculoData())
                 return View(data.Read());
         }
 
@@ -26,47 +26,46 @@ namespace Unica.Controllers
         }
 
         [HttpPost]
-        public IActionResult Create(Cliente cliente)
+        public IActionResult Create(Veiculo veiculo)
         {
-            cliente.Status = 1;
+            veiculo.Status = 1;
             if (!ModelState.IsValid)
             {
-                return View(cliente);
+                return View(veiculo);
             }
 
-            using (var data = new ClienteData())
-                data.Create(cliente);
+            using (var data = new VeiculoData())
+                data.Create(veiculo);
             return RedirectToAction("Index");
         }
 
         [HttpGet]
         public IActionResult Update(int id)
         {
-            using (var data = new ClienteData())
+            using (var data = new VeiculoData())
                 return View(data.ReadById(id));
         }
 
         [HttpPost]
-        public IActionResult Update(Cliente cliente)
+        public IActionResult Update(Veiculo veiculo)
         {
             if (!ModelState.IsValid)
             {
-                return View(cliente);
+                return View(veiculo);
             }
 
-            using (var data = new ClienteData())
-                data.Update(cliente);
+            using (var data = new VeiculoData())
+                data.Update(veiculo);
             return RedirectToAction("Index");
         }
 
         public IActionResult Delete(int id)
         {
-            using (var data = new ClienteData())
+            using (var data = new VeiculoData())
                 data.Delete(id);
 
             return RedirectToAction("Index");
         }
-
 
     }
 }

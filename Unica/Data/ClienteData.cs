@@ -30,7 +30,7 @@ namespace Unica.Data
             sqlCommand.Parameters.AddWithValue("@cidade", cliente.Cidade);
             sqlCommand.Parameters.AddWithValue("@estado", cliente.Estado);
             sqlCommand.Parameters.AddWithValue("@cep", cliente.Cep);
-            sqlCommand.Parameters.AddWithValue("@status", 1);
+            sqlCommand.Parameters.AddWithValue("@status", cliente.Status);
             sqlCommand.Parameters.AddWithValue("@cnpj", cliente.Cnpj);
             sqlCommand.Parameters.AddWithValue("@razao_social", cliente.RazaoSocial);
 
@@ -134,6 +134,7 @@ namespace Unica.Data
                 cliente.Cep = (string)reader["cep"];
                 cliente.Cnpj = (string)reader["cnpj"];
                 cliente.RazaoSocial = (string)reader["razao_social"];
+                cliente.Status = (int)reader["status"];
             }
             return cliente;
         }
@@ -164,13 +165,15 @@ namespace Unica.Data
 
             sqlCommand.ExecuteNonQuery();
         }
-        public void Deactivate(int id)
+
+        public void Delete(int id)
         {
             SqlCommand sqlCommand = new SqlCommand();
             sqlCommand.Connection = base.DbConnection;
 
-            sqlCommand.CommandText = @" EXEC deactivatePes @id";
+            sqlCommand.CommandText = @" EXEC deactivatePes @id, @status";
             sqlCommand.Parameters.AddWithValue("@id", id);
+            sqlCommand.Parameters.AddWithValue("@status", 2);
             sqlCommand.ExecuteNonQuery();
         }
     }
