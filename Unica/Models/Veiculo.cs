@@ -5,7 +5,7 @@ namespace Unica.Models
     public class Veiculo
     {
 
-        public int? Id {get; set;}
+        public int? Id { get; set; }
         public string Placa { get; set; }
 
         public string Marca { get; set; }
@@ -18,11 +18,12 @@ namespace Unica.Models
 
         public float? Carga { get; set; }
 
-        public CategoriaVeiculo Categoria { get; set; }
+        public string Categoria { get; set; }
 
-        public TipoVeiculo Tipo { get; set; }
+        public string Tipo { get; set; }
 
-        public StatusVeiculo Status;
+        public int Status { get; set; }
+
 
         public Veiculo()
         {

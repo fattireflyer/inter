@@ -9,113 +9,111 @@ namespace Unica.Data
 {
     public class VeiculoData : Data
     {
-        public void Create (Veiculo veiculo)
+        public void Create(Veiculo veiculo)
         {
             SqlCommand sqlCommand = new SqlCommand();
             sqlCommand.Connection = base.DbConnection;
-            sqlCommand.CommandText = @"EXEC cadVei @placa, @descricao, @valor_diaria, @lugares, @carga, @categoria_id, @status";
+            sqlCommand.CommandText = @"EXEC cadVei @placa, @descricao, @valor_diaria, @lugares, @carga, @categoria, @tipo, @status";
 
             sqlCommand.Parameters.AddWithValue("@placa", veiculo.Placa);
             sqlCommand.Parameters.AddWithValue("@descricao", veiculo.Descricao);
             sqlCommand.Parameters.AddWithValue("@valor_diaria", veiculo.ValorDiaria);
             sqlCommand.Parameters.AddWithValue("@lugares", veiculo.Lugares);
             sqlCommand.Parameters.AddWithValue("@carga", veiculo.Carga);
-            sqlCommand.Parameters.AddWithValue("@categoria_id", veiculo.Categoria.Id);
-            sqlCommand.Parameters.AddWithValue("@tipo_id", veiculo.Tipo.Id);
+            sqlCommand.Parameters.AddWithValue("@categoria", veiculo.Categoria);
+            sqlCommand.Parameters.AddWithValue("@tipo", veiculo.Tipo);
             sqlCommand.Parameters.AddWithValue("@status", veiculo.Status);
 
             sqlCommand.ExecuteNonQuery();
         }
 
-        public List<Veiculo> Read ()
+        public List<Veiculo> Read()
         {
             List<Veiculo> lista = null;
-            try{
-                    SqlCommand sqlCommand = new SqlCommand();
-                    sqlCommand.Connection = base.DbConnection;
-                    sqlCommand.CommandText = @"SELECT * FROM v_veiculos";
-                    SqlDataReader reader = sqlCommand.ExecuteReader();
+            try
+            {
+                SqlCommand sqlCommand = new SqlCommand();
+                sqlCommand.Connection = base.DbConnection;
+                sqlCommand.CommandText = @"SELECT * FROM v_veiculos";
+                SqlDataReader reader = sqlCommand.ExecuteReader();
 
-                    lista = new List<Veiculo>();
+                lista = new List<Veiculo>();
 
-                    while(reader.Read())
-                    {
-                        Veiculo veiculo             = new Veiculo();
-                        veiculo.Placa               = (string)reader["placa"];
-                        veiculo.Id              = (int)reader["id"];
-                        veiculo.Descricao           = (string)reader["descricao"];
-                        veiculo.ValorDiaria         = (double)reader["valor_diaria"];
-                        veiculo.Lugares             = (int)reader["lugares"];
-                        veiculo.Carga               = (float)reader["carga"];
-                        veiculo.Categoria.Id    = (int)reader["categoria_id"];
-                        veiculo.Categoria.Descricao = (string)reader["categoria"];
-                        veiculo.Tipo.Id         = (int)reader["tipo_id"];    
-                        veiculo.Tipo.Descricao      = (string)reader["tipo"];
-                        veiculo.Status              = (StatusVeiculo)reader["status"];
-        
-                        lista.Add(veiculo);
-                    }
-                }
-                catch(SqlException ex)
+                while (reader.Read())
                 {
-                    StringBuilder errorMessages = new StringBuilder();
+                    Veiculo veiculo = new Veiculo();
+                    veiculo.Placa = (string)reader["placa"];
+                    veiculo.Id = (int)reader["id"];
+                    veiculo.Descricao = (string)reader["descricao"];
+                    veiculo.ValorDiaria = (double)reader["valor_diaria"];
+                    veiculo.Lugares = (int)reader["lugares"];
+                    veiculo.Carga = (float)reader["carga"];
+                    veiculo.Categoria = (string)reader["categoria"];
+                    veiculo.Tipo = (string)reader["tipo"];
+                    veiculo.Status = (int)reader["status"];
 
-                    for (int i = 0; i < ex.Errors.Count; i++)
-                    {
-                        errorMessages.Append("Index #" + i + "\n" +
-                            "Message: " + ex.Errors[i].Message + "\n" +
-                            "LineNumber: " + ex.Errors[i].LineNumber + "\n" +
-                            "Source: " + ex.Errors[i].Source + "\n" +
-                            "Procedure: " + ex.Errors[i].Procedure + "\n");
-                    }
-                    Console.WriteLine(errorMessages.ToString());
+                    lista.Add(veiculo);
                 }
+            }
+            catch (SqlException ex)
+            {
+                StringBuilder errorMessages = new StringBuilder();
+
+                for (int i = 0; i < ex.Errors.Count; i++)
+                {
+                    errorMessages.Append("Index #" + i + "\n" +
+                        "Message: " + ex.Errors[i].Message + "\n" +
+                        "LineNumber: " + ex.Errors[i].LineNumber + "\n" +
+                        "Source: " + ex.Errors[i].Source + "\n" +
+                        "Procedure: " + ex.Errors[i].Procedure + "\n");
+                }
+                Console.WriteLine(errorMessages.ToString());
+            }
             return lista;
         }
-        
-        
-        public Veiculo ReadById(int id){
+
+
+        public Veiculo ReadById(int id)
+        {
             string idString = Convert.ToString(id);
             return Read("id", idString);
         }
-        
-        public Veiculo ReadbyPlaca (string placa){return Read("placa",placa);}
 
-        private Veiculo Read (string tipo, string stringBusca)
+        public Veiculo ReadbyPlaca(string placa) { return Read("placa", placa); }
+
+        private Veiculo Read(string tipo, string stringBusca)
         {
             Veiculo veiculo = null;
 
             string cmdTxt = new StringBuilder("SELECT *  from v_veiculos WHERE id = @").Append(tipo).ToString();
-            SqlCommand sqlCommand = new SqlCommand(cmdTxt, base.DbConnection );
-            sqlCommand.Parameters.AddWithValue("@"+tipo, stringBusca);
-            
+            SqlCommand sqlCommand = new SqlCommand(cmdTxt, base.DbConnection);
+            sqlCommand.Parameters.AddWithValue("@" + tipo, stringBusca);
+
             SqlDataReader reader = sqlCommand.ExecuteReader();
 
-            if(reader.Read())
+            if (reader.Read())
             {
                 veiculo = new Veiculo();
-                veiculo.Id              = (int)reader["id"];
-                veiculo.Placa               = (string)reader["placa"];
-                veiculo.Descricao           = (string)reader["descricao"];
-                veiculo.ValorDiaria         = (double)reader["valor_diaria"];
-                veiculo.Lugares             = (int)reader["lugares"];
-                veiculo.Carga               = (float)reader["carga"];
-                veiculo.Categoria.Id    = (int)reader["categoria_id"];
-                veiculo.Categoria.Descricao = (string)reader["categoria"];
-                veiculo.Tipo.Id         = (int)reader["tipo_id"];
-                veiculo.Tipo.Descricao      = (string)reader["tipo"];
-                veiculo.Status              = (StatusVeiculo)reader["status"];
-            }    
+                veiculo.Placa = (string)reader["placa"];
+                veiculo.Id = (int)reader["id"];
+                veiculo.Descricao = (string)reader["descricao"];
+                veiculo.ValorDiaria = (double)reader["valor_diaria"];
+                veiculo.Lugares = (int)reader["lugares"];
+                veiculo.Carga = (float)reader["carga"];
+                veiculo.Categoria = (string)reader["categoria"];
+                veiculo.Tipo = (string)reader["tipo"];
+                veiculo.Status = (int)reader["status"];
+            }
             return veiculo;
         }
 
-        public void Update (Veiculo veiculo)
+        public void Update(Veiculo veiculo)
         {
             SqlCommand sqlCommand = new SqlCommand();
             sqlCommand.Connection = base.DbConnection;
 
-            sqlCommand.CommandText = 
-            @"EXEC altVei  @placa, @descricao,  @valor_diaria, @lugares, @carga, @categoria_id, @tipo_id, @status, @id; ";
+            sqlCommand.CommandText =
+            @"EXEC altVei  @placa, @descricao,  @valor_diaria, @lugares, @carga, @categoria, @tipo, @status, @id; ";
 
             sqlCommand.Parameters.AddWithValue("@id", veiculo.Id);
             sqlCommand.Parameters.AddWithValue("@placa", veiculo.Placa);
@@ -123,12 +121,12 @@ namespace Unica.Data
             sqlCommand.Parameters.AddWithValue("@valor_diaria", veiculo.ValorDiaria);
             sqlCommand.Parameters.AddWithValue("@lugares", veiculo.Lugares);
             sqlCommand.Parameters.AddWithValue("@carga", veiculo.Carga);
-            sqlCommand.Parameters.AddWithValue("@categoria_id", veiculo.Categoria.Id);
-            sqlCommand.Parameters.AddWithValue("@tipo_id", veiculo.Tipo.Id);
+            sqlCommand.Parameters.AddWithValue("@categoria", veiculo.Categoria);
+            sqlCommand.Parameters.AddWithValue("@tipo", veiculo.Tipo);
             sqlCommand.Parameters.AddWithValue("@status", veiculo.Status);
-            sqlCommand.ExecuteNonQuery();     
+            sqlCommand.ExecuteNonQuery();
         }
-        public void Delete (int id)
+        public void Delete(int id)
         {
             SqlCommand sqlCommand = new SqlCommand();
             sqlCommand.Connection = base.DbConnection;
