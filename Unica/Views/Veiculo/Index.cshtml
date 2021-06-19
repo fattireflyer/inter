@@ -1,6 +1,6 @@
 ﻿@model Veiculo
 
-<br/>
+<br />
 
 @if (@Model == null)
 {
@@ -22,16 +22,14 @@ else
             <td>@Model.Tipo</td>
             <td>@Model.Status</td>
             <td>
-                <a class="btn btn-sm btn-danger"
-                   href="/cliente/delete/@Model.Id">
+                <a class="btn btn-sm btn-danger" href="/cliente/delete/@Model.Id">
                     Apagar
                 </a>
-                <a class="btn btn-sm btn-danger"
-                   href="/cliente/update/@Model.Id">
+                <a class="btn btn-sm btn-danger" href="/cliente/update/@Model.Id">
                     Editar
                 </a>
             </td>
         </tr>
     </table>
 }
-<a class="btn btn-primary" href="/cliente/create">Adicionar</a>
+<a class="btn btn-primary" href="/veiculo/create">Adicionar</a>

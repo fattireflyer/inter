@@ -1,8 +1,8 @@
 create database unica_db
-go 
+
 
 use unica_db
-go
+
 
 create table pessoas
 (
@@ -20,7 +20,7 @@ create table pessoas
 	status		    int,
   check(status in (1,2))
 )
-go
+
 
 create table clientes 
 (
@@ -30,7 +30,7 @@ create table clientes
 	constraint pk_cliente		primary key (pessoa_id),
 	constraint fk_pessoa_cliente		foreign key (pessoa_id)		   references pessoas
 )
-go
+
 
 create table funcionarios 
 (
@@ -43,22 +43,6 @@ create table funcionarios
 	constraint pk_funcionario	primary key (pessoa_id),
 	constraint fk_pessoa_funcionario		foreign key (pessoa_id)		   references pessoas
 )
-go
-
-create table categorias
-(
-    id              int             not null        primary key identity,
-    descricao           varchar(50)     not null
-)
-go
-
-create table tipos
-(
-    id              int             not null        primary key identity,
-    descricao           varchar(50)     not null
-)
-go
-
 
 
 create table veiculos
@@ -69,19 +53,17 @@ create table veiculos
     valor_diaria        money           not null,
     lugares             int             not null,
     carga               int                 null,
-    categoria_id    int             not null,
-    tipo_id         int             not null,
+    categoria			varchar(50)             not null,
+    tipo				varchar(50)             not null,
     status		        int,
     check(status in (1,2)),
-    constraint pk_veiculo       primary key (id),
-    constraint fk_categoria_veiculo     foreign key (categoria_id)      references categorias,
-    constraint fk_tipo_veiculo         foreign key (tipo_id)           references tipos                 
+    constraint pk_veiculo       primary key (id),          
 )
-go
 
-go
+
+
 alter table veiculos add marca varchar(max)
-go
+
 
 create table contratos
 (
@@ -127,7 +109,7 @@ create table reservas
 
 -- Cadastrar Cliente --
 
-go
+
 create procedure cadCli
 (
 	@nome					varchar(50), 
@@ -151,9 +133,9 @@ begin
 					@cidade, @estado, @cep, @status)
 	insert into clientes values (@@IDENTITY, @cnpj, @razao_social)
 end
-go
+
 -- alterar cliente --
-go
+
 create procedure altCli
 (
 	@id				int,
@@ -181,7 +163,7 @@ begin
 	update clientes set cnpj = @cnpj, razao_social = @razao_social
 	where pessoa_id = @id
 end
-go
+
 -- desativar pessoa --
 create procedure deactivatePes
 (
@@ -193,9 +175,9 @@ begin
 	update pessoas set status = 2
 	where id = @id
 end
-go
+
 -- cadastrar funcionario --
-go
+
 create procedure cadFunc
 (
 	@nome					varchar(50), 
@@ -223,9 +205,9 @@ begin
 					@cidade, @estado, @cep, @status)
 	insert into funcionarios values (@@IDENTITY, @cpf, @salario, @cargo, @usuario, @senha)
 end
-go
+
 -- alterar funcionario
-go
+
 create procedure altFunc
 (
 	@id       int,
@@ -257,7 +239,7 @@ begin
 	update funcionarios set cpf = @cpf, salario = @salario, cargo = @cargo, usuario = @usuario, senha = @senha
 	where pessoa_id = @id
 end
-go
+
 -- Cadastrar Veículo
 create procedure cadVei
 (
@@ -266,8 +248,8 @@ create procedure cadVei
   @valor_diaria        money,
   @lugares             int,
   @carga               int,
-  @categoria_id    int,
-  @tipo_id         int,
+  @categoria    varchar(50),
+  @tipo         varchar(50),
   @status		        	 int,
   @marca			varchar(max)
 )
@@ -275,11 +257,11 @@ as
 begin 
 		insert into veiculos 
 		values 
-				(@placa, @descricao, @valor_diaria, @lugares, @carga, @categoria_id, @tipo_id, @status, @marca)
+				(@placa, @descricao, @valor_diaria, @lugares, @carga, @categoria, @tipo, @status, @marca)
 end 
-go
+
 -- Alterar Veículo
-go 
+
 create procedure altVei
 (
 	@id 						 int,
@@ -288,51 +270,47 @@ create procedure altVei
   @valor_diaria        money,
   @lugares             int,
   @carga               int,
-  @categoria_id    int,
-  @tipo_id         int,
+  @categoria		varchar(50),
+  @tipo				varchar(50),
   @status		        	 int,
   @marca			varchar(max)
 )
 as 
 begin 
 	update veiculos set placa = @placa, descricao = @descricao, valor_diaria = @valor_diaria,
-	lugares = @lugares, carga = @carga, categoria_id = @categoria_id, tipo_id = @tipo_id, status = @status,
+	lugares = @lugares, carga = @carga, categoria = @categoria, tipo = @tipo, status = @status,
 	marca = @marca
 	where id = @id; 
 end 
-go 
+
 
 /* VIEWS */
-go 
+
 create view v_clientes as 
 	select p.*, c.cnpj, c.razao_social 
 		from pessoas p 
 		INNER JOIN clientes c ON  c.pessoa_id = p.id
-go
 
-go 
+
 create view v_funcionarios AS
 	select p.*, f.cpf, f.cargo, f.usuario, f.senha, f.salario
 		from pessoas p 
 		INNER JOIN funcionarios f ON  f.pessoa_id = p.id
-go
 
-go 
+
+
 create view v_veiculos as 
-	select v.*, c.descricao categoria, t.descricao tipo
-	from veiculos v 
-	inner join categorias c
-	ON v.categoria_id = c.id
-	inner join tipos t
-	ON v.tipo_id = t.id
-go
+	select *
+	from veiculos 
 
-go create view v_reservas as 
+
+
+create view v_reservas as 
 select r.contrato_id, r.data_saida, r.data_contratada, r.data_devolucao, r.status,
 		   v.*
 from 	     reservas r 
 inner join v_veiculos v
 on				 r.veiculo_placa = v.placa
-go 
+ 
 
 
