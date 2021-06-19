@@ -7,12 +7,11 @@ namespace Unica.Models
 {
     public class FuncionarioViewModel
     {
-        
+
 
         //propriedades & atributos:
         [Display(Name = "Usuário")]
         [Required(ErrorMessage = "Campo Usuário obrigatório")]
-        [DataType(DataType.EmailAddress)]
         public string Usuario { get; set; }
 
         [Display(Name = "Senha")]
@@ -21,6 +20,6 @@ namespace Unica.Models
         [MinLength(6, ErrorMessage = "A senha deve conter no mínimo 6 caracteres")]
         public string Senha { get; set; }
 
-        
+
     }
 }

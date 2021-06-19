@@ -9,21 +9,13 @@ using Unica.Models;
 
 namespace Unica.Controllers
 {
-    public class FuncionarioController : Controller
+    public class ClienteController : Controller
     {
         // GET: /<controller>/
         public IActionResult Index()
         {
             return View();
         }
-
-
-        [HttpGet]
-        public IActionResult Login()
-        {
-            return View(new FuncionarioViewModel());
-        }
-
 
         [HttpGet]
         public IActionResult Create()

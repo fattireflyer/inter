@@ -14,11 +14,14 @@ namespace Unica.Data
         {
             try
             {
-                string strConexao = @"Data Source = localhost;
-                            Initial Catalog = bdecommerce;
-                            Integrated Security = false;
-                            User Id = sa;
-                            Password = 123456789!";
+                string strConexao = "Data Source = DESKTOP-RQAQ2G0; " +
+                    "Initial Catalog = unica_db;" +
+                    " Integrated Security = true;";
+                // string strConexao = @"Data Source = localhost;
+                //             Initial Catalog = bdecommerce;
+                //             Integrated Security = false;
+                //             User Id = sa;
+                //             Password = 123456789!";
 
                 DbConnection = new SqlConnection(strConexao);
 
@@ -26,7 +29,7 @@ namespace Unica.Data
             }
             catch (SqlException ex)
             {
-               
+
                 StringBuilder errorMessages = new StringBuilder();
 
                 for (int i = 0; i < ex.Errors.Count; i++)
@@ -39,13 +42,13 @@ namespace Unica.Data
                 }
                 Console.WriteLine(errorMessages.ToString());
 
-           
+
             }
         }
 
         public void Dispose()
         {
-            throw new NotImplementedException();
+            DbConnection.Close();
         }
     }
 }

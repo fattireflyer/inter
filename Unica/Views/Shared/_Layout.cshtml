@@ -1,5 +1,9 @@
-﻿<!DOCTYPE html>
+﻿@inject Microsoft.AspNetCore.Http.IHttpContextAccessor HttpContextAccessor
+@using Microsoft.AspNetCore.Http
+@using System.Text.Json
+<!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -7,28 +11,53 @@
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" />
 </head>
+
 <body>
-    <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
-            <div class="container">
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">Unica</a>
-                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                        aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="navbar-collapse collapse d-sm-inline-flex flex-sm-row-reverse">
-                    <ul class="navbar-nav flex-grow-1">
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-                        </li>
-                    </ul>
-                </div>
-            </div>
-        </nav>
-    </header>
+    @{
+        string json = HttpContextAccessor.HttpContext.Session.GetString("user");
+
+        if (json != null)
+        {
+            Funcionario user = JsonSerializer.Deserialize<Funcionario>(json);
+
+            if (user != null)
+            {
+                <header>
+                    <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
+                        <div class="container">
+                            <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">Unica</a>
+                            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse"
+                        aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                                <span class="navbar-toggler-icon"></span>
+                            </button>
+                            <div class="navbar-collapse collapse d-sm-inline-flex flex-sm-row-reverse">
+                                <ul class="navbar-nav flex-grow-1">
+                                    <li class="nav-item">
+                                        <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link text-dark" asp-area="" asp-controller="Home"
+                                    asp-action="Privacy">Privacy</a>
+                                    </li>
+                                </ul>
+                                <ul style="position: absolute; right: 0;" class="navbar-nav ml-auto">
+                                    <li class="nav-item">
+                                        <a href="/funcionario/update/@user.Id" class="nav-link text-dark">Bem vindo @user.Nome</a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <form asp-controller="Funcionario" asp-action="Logout" method="post"><button
+                                        class="nav-link"
+                                        style="border: 0; background-color: #ada8a8 ;color:red">Sair</button>
+                                        </form>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </nav>
+                </header>
+            }
+        }
+    }
     <div class="container">
         <main role="main" class="pb-3">
             @RenderBody()
@@ -45,4 +74,5 @@
     <script src="~/js/site.js" asp-append-version="true"></script>
     @RenderSection("Scripts", required: false)
 </body>
+
 </html>

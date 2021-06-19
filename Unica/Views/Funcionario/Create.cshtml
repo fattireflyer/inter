@@ -49,6 +49,22 @@
             <span asp-validation-for="Cep"></span>
         </div>
 
+        <div class="form-group col-md-4">
+            <label>Logradouro</label>
+            <input asp-for="Logradouro" class="form-control" />
+            <span asp-validation-for="Logradouro"></span>
+        </div>
+
+        <div class="form-group col-md-4">
+            <label>Número</label>
+            <input asp-for="Numero" class="form-control" />
+            <span asp-validation-for="Numero"></span>
+        </div>
+        <div class="form-group col-md-4">
+            <label>Complemento</label>
+            <input asp-for="Complemento" class="form-control" />
+        </div>
+
     </div>
     <div class="form-row">
         <div class="form-group col-md-6">
@@ -56,15 +72,10 @@
             <input asp-for="Cargo" class="form-control" />
             <span asp-validation-for="Cargo"></span>
         </div>
-        <div class="form-group col-md-3">
+        <div class="form-group col-md-6">
             <label>Salário</label>
             <input asp-for="Salario" class="form-control" />
             <span asp-validation-for="Salario"></span>
-        </div>
-        <div class="form-group col-md-3">
-            <label>Status</label>
-            <input asp-for="Status" class="form-control" />
-            <span asp-validation-for="Status"></span>
         </div>
     </div>
     <div class="form-row">

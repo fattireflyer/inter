@@ -6,11 +6,11 @@ namespace Unica.Models
     {
         public int? Id { get; set; }
 
-        [Display(Name="Nome")]
+        [Display(Name = "Nome")]
         [Required(ErrorMessage = "Campo Nome obrigatório")]
-        public string Nome { get; set;}
+        public string Nome { get; set; }
 
-        [Display(Name ="Telefone")]
+        [Display(Name = "Telefone")]
         [Required(ErrorMessage = "Campo Telefone obrigatório")]
         public string Telefone { get; set; }
 
@@ -19,9 +19,6 @@ namespace Unica.Models
         [Required(ErrorMessage = "Campo E-mail obrigatório")]
         [DataType(DataType.EmailAddress)]
         public string Email { get; set; }
-
-        [Display(Name = "Status")]
-        [Required(ErrorMessage = "Campo Status obrigatório")]
         public StatusPessoa Status { get; set; }
 
 
@@ -31,10 +28,7 @@ namespace Unica.Models
 
         [Display(Name = "Número")]
         [Required(ErrorMessage = "Campo Número obrigatório")]
-        public string Numero{ get; set; }
-
-        [Display(Name = "Complemento")]
-        [Required(ErrorMessage = "Campo Complemento obrigatório")]
+        public string Numero { get; set; }
         public string Complemento { get; set; }
 
         [Display(Name = "Bairro")]
@@ -55,7 +49,7 @@ namespace Unica.Models
 
         public Pessoa()
         {
-            
+
         }
     }
 }

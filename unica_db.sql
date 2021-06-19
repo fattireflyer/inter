@@ -28,7 +28,7 @@ create table clientes
   cnpj           varchar(20)    not null,
   razao_social   varchar(150)   not null,
 	constraint pk_cliente		primary key (pessoa_id),
-	constraint fk_pessoa		foreign key (pessoa_id)		   references pessoas
+	constraint fk_pessoa_cliente		foreign key (pessoa_id)		   references pessoas
 )
 go
 
@@ -41,7 +41,7 @@ create table funcionarios
   usuario             varchar(20)     not null,
   senha               varchar(50)     not null,                         
 	constraint pk_funcionario	primary key (pessoa_id),
-	constraint fk_pessoa		foreign key (pessoa_id)		   references pessoas
+	constraint fk_pessoa_funcionario		foreign key (pessoa_id)		   references pessoas
 )
 go
 
@@ -74,9 +74,13 @@ create table veiculos
     status		        int,
     check(status in (1,2)),
     constraint pk_veiculo       primary key (id),
-    constraint fk_categoria     foreign key (categoria_id)      references categorias,
-    constraint fk_tipo          foreign key (tipo_id)           references tipos                 
+    constraint fk_categoria_veiculo     foreign key (categoria_id)      references categorias,
+    constraint fk_tipo_veiculo         foreign key (tipo_id)           references tipos                 
 )
+go
+
+go
+alter table veiculos add marca varchar(max)
 go
 
 create table contratos
@@ -88,7 +92,7 @@ create table contratos
 	data_final 		datetime 					null,
 	status		    int,
     check(status in (1,2,3,4)),
-	contraint pk_contratos		primary key (id)
+	constraint pk_contratos		primary key (id)
 )
 
 create table contratos_lp
@@ -97,21 +101,21 @@ create table contratos_lp
 	mensalidade			money 				not null,
 	tempo_contrato	int 					not null,
 	constraint pk_conttratos_lp	primary key (contrato_id),
-	constraint fk_contrato_id 	foreign key (contrato_id)			references contratos
+	constraint fk_contrato_id_lp 	foreign key (contrato_id)			references contratos
 )
 
 create table reservas
 (
 	contrato_id			int 				not null,
-	veiculo_placa		varchar 		not null,
+	veiculo_id		int 		not null,
 	data_saida			datetime 		not null,
 	data_contratada datetime 		not null,
 	data_devolucao 	datetime 	not null,
 	STATUS					int,
 	check (status in (0,1)),
-	constraint pk_reservas		primary key (contrato_id, veiculo_placa),
-	constraint fk_contrato_id	foreign key (contrato_id)			references contratos,
-	constraint fk_veiculo_placa foreign key (veiculo_placa)	references veiculos
+	constraint pk_reservas		primary key (contrato_id, veiculo_id),
+	constraint fk_contrato_id_reserva	foreign key (contrato_id)			references contratos,
+	constraint fk_veiculo_id_reserva foreign key (veiculo_id)	references veiculos
 )
 
 
@@ -206,6 +210,7 @@ create procedure cadFunc
 	@cep 					varchar(8), 
 	@status 			int, 
 	@cpf 					varchar(14), 
+	@salario		money,
 	@cargo			  varchar(max),
 	@usuario      varchar(20),
   @senha         varchar(50)       
@@ -216,7 +221,7 @@ begin
 	insert into pessoas  
 	values (@nome, @telefone, @email, @logradouro, @numero, @complemento, @bairro,
 					@cidade, @estado, @cep, @status)
-	insert into funcionarios values (@@IDENTITY, @cpf, @cargo, @usuario, @senha)
+	insert into funcionarios values (@@IDENTITY, @cpf, @salario, @cargo, @usuario, @senha)
 end
 go
 -- alterar funcionario
@@ -236,6 +241,7 @@ create procedure altFunc
 	@cep 					varchar(8), 
 	@status 			int, 
 	@cpf 					varchar(14), 
+	@salario		money,
 	@cargo			  varchar(max),
 	@usuario      varchar(20),
   @senha         varchar(50)  
@@ -248,7 +254,7 @@ begin
 	 cep = @cep, status = @status
 	where id = @id
 
-	update clientes set cpf = @cpf, cargo = @cargo, usuario = @usuario, senha = @senha
+	update funcionarios set cpf = @cpf, salario = @salario, cargo = @cargo, usuario = @usuario, senha = @senha
 	where pessoa_id = @id
 end
 go
@@ -262,13 +268,14 @@ create procedure cadVei
   @carga               int,
   @categoria_id    int,
   @tipo_id         int,
-  @status		        	 int
+  @status		        	 int,
+  @marca			varchar(max)
 )
 as
 begin 
 		insert into veiculos 
 		values 
-				(@placa, @descricao, @valor_diaria, @lugares, @carga, @categoria_id, @tipo_id, @status)
+				(@placa, @descricao, @valor_diaria, @lugares, @carga, @categoria_id, @tipo_id, @status, @marca)
 end 
 go
 -- Alterar Veículo
@@ -283,12 +290,14 @@ create procedure altVei
   @carga               int,
   @categoria_id    int,
   @tipo_id         int,
-  @status		        	 int
+  @status		        	 int,
+  @marca			varchar(max)
 )
 as 
 begin 
 	update veiculos set placa = @placa, descricao = @descricao, valor_diaria = @valor_diaria,
-	lugares = @lugares, carga = @carga, categoria_id = @categoria_id, tipo_id = @tipo_id, status = @status
+	lugares = @lugares, carga = @carga, categoria_id = @categoria_id, tipo_id = @tipo_id, status = @status,
+	marca = @marca
 	where id = @id; 
 end 
 go 
@@ -299,7 +308,6 @@ create view v_clientes as
 	select p.*, c.cnpj, c.razao_social 
 		from pessoas p 
 		INNER JOIN clientes c ON  c.pessoa_id = p.id
-		ORDER BY p.nome
 go
 
 go 
@@ -307,7 +315,6 @@ create view v_funcionarios AS
 	select p.*, f.cpf, f.cargo, f.usuario, f.senha 
 		from pessoas p 
 		INNER JOIN funcionarios f ON  f.pessoa_id = p.id
-		ORDER BY p.nome
 go
 
 go 
@@ -316,7 +323,7 @@ create view v_veiculos as
 	from veiculos v 
 	inner join categorias c
 	ON v.categoria_id = c.id
-	inner join tipos
+	inner join tipos t
 	ON v.tipo_id = t.id
 go
 

@@ -1,7 +1,5 @@
 ﻿@model FuncionarioViewModel
 
-@{ Layout = "~/Views/Shared/_LoginLayout.cshtml"; }
-
 
 @if (ViewBag.Message != null)
 {
@@ -11,8 +9,7 @@
 <form asp-controller="Funcionario" asp-action="Login" method="post">
     <div style="display: flex; justify-content: center;
         align-items: center; margin-top: 260px;">
-        <img src="~/images/logo.png" width="400px"
-             height="200px" style="position: absolute; top: 50px;" />
+        <img src="~/images/logo.png" width="400px" height="200px" style="position: absolute; top: 50px;" />
         <div style="width: 400px; height: 50%;">
             <div class="form-group">
                 <label>Usuário</label>
@@ -25,10 +22,12 @@
                 <input asp-for="Senha" class="form-control" />
                 <span asp-validation-for="Senha"></span>
             </div>
+            <div style="display: flex; flex-direction: column;">
+                <button class="btn btn-primary form-control" background-color="#922b21">Entrar</button>
 
-            <button class="btn btn-primary form-control" background-color="#922b21">Entrar</button>
-
-            <a asp-area="" asp-controller="Funcionario" asp-action="Create">Criar uma conta</a>
+                <a style="align-self: center;" asp-area="" asp-controller="Funcionario" asp-action="Create">Criar uma
+                    conta</a>
+            </div>
         </div>
     </div>
 </form>
