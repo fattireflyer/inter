@@ -68,6 +68,7 @@ namespace Unica.Data
                     funcionario.Estado = (string)reader["estado"];
                     funcionario.Cep = (string)reader["cep"];
                     funcionario.Cpf = (string)reader["cpf"];
+                    funcionario.Salario = (double)reader["salario"];
                     funcionario.Cargo = (string)reader["cargo"];
 
                     lista.Add(funcionario);
@@ -126,6 +127,7 @@ namespace Unica.Data
                 funcionario.Complemento = (string)reader["complemento"];
                 funcionario.Bairro = (string)reader["bairro"];
                 funcionario.Cidade = (string)reader["cidade"];
+                funcionario.Salario = (double)reader["salario"];
                 funcionario.Estado = (string)reader["estado"];
                 funcionario.Cep = (string)reader["cep"];
                 funcionario.Cpf = (string)reader["cpf"];
@@ -158,6 +160,7 @@ namespace Unica.Data
                 funcionario.Complemento = (string)reader["complemento"];
                 funcionario.Bairro = (string)reader["bairro"];
                 funcionario.Cidade = (string)reader["cidade"];
+                funcionario.Salario = (double)reader["salario"];
                 funcionario.Estado = (string)reader["estado"];
                 funcionario.Cep = (string)reader["cep"];
                 funcionario.Cpf = (string)reader["cpf"];
@@ -175,7 +178,7 @@ namespace Unica.Data
 
             sqlCommand.CommandText =
             @"EXEC altFunc  @id, @nome,  @telefone,  @email,  @logradouro, @numero,  @complemento, 
-             @bairro, @cidade,  @estado, @cep,  @status, @cpf, @cargo";
+             @bairro, @cidade,  @estado, @cep,  @status, @cpf, @salario @cargo";
 
             sqlCommand.Parameters.AddWithValue("@id", funcionario.Id);
             sqlCommand.Parameters.AddWithValue("@nome", funcionario.Nome);
@@ -190,6 +193,7 @@ namespace Unica.Data
             sqlCommand.Parameters.AddWithValue("@cep", funcionario.Cep);
             sqlCommand.Parameters.AddWithValue("@status", funcionario.Status);
             sqlCommand.Parameters.AddWithValue("@cpf", funcionario.Cpf);
+            sqlCommand.Parameters.AddWithValue("@salario", funcionario.Salario);
             sqlCommand.Parameters.AddWithValue("@cargo", funcionario.Cargo);
             sqlCommand.Parameters.AddWithValue("@senha", funcionario.Senha);
             sqlCommand.Parameters.AddWithValue("@usuario", funcionario.Usuario);
