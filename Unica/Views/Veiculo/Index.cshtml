@@ -1,35 +1,44 @@
-﻿@model Veiculo
+﻿@model List<Veiculo>
 
-<br />
+<div style="display: flex; flex-direction: column;">
 
-@if (@Model == null)
-{
-    <h3>@ViewBag.Mensagem</h3>
-}
-else
-{
-    <h3>@ViewBag.Mensagem @Model.Descricao</h3>
     <table class="table table-hover">
         <tr>
-            <td>@Model.Id</td>
-            <td>@Model.Descricao</td>
-            <td>@Model.Marca</td>
-            <td>@Model.Placa</td>
-            <td>@Model.ValorDiaria</td>
-            <td>@Model.Lugares</td>
-            <td>@Model.Carga</td>
-            <td>@Model.Categoria</td>
-            <td>@Model.Tipo</td>
-            <td>@Model.Status</td>
-            <td>
-                <a class="btn btn-sm btn-danger" href="/cliente/delete/@Model.Id">
-                    Apagar
-                </a>
-                <a class="btn btn-sm btn-danger" href="/cliente/update/@Model.Id">
-                    Editar
-                </a>
-            </td>
+            <th>Id</th>
+            <th>Descricao</th>
+            <th>Marca</th>
+            <th>Placa</th>
+            <th>ValorDiaria</th>
+            <th>Lugares</th>
+            <th>Carga</th>
+            <th>Categoria</th>
+            <th>Tipo</th>
+            <th>Status</th>
+            <th></th>
         </tr>
+        @foreach (var veiculo in Model)
+        {
+            <tr>
+                <td>@veiculo.Id</td>
+                <td>@veiculo.Descricao</td>
+                <td>@veiculo.Marca</td>
+                <td>@veiculo.Placa</td>
+                <td>R$ @veiculo.ValorDiaria.ToString("F")</td>
+                <td>@veiculo.Lugares</td>
+                <td>@veiculo.Carga</td>
+                <td>@veiculo.Categoria</td>
+                <td>@veiculo.Tipo</td>
+                <td>@veiculo.Status</td>
+                <td>
+                    <a class="btn btn-sm btn-primary" href="/veiculo/update/@veiculo.Id">
+                        Editar
+                    </a>
+                    <a class="btn btn-sm btn-danger" href="/veiculo/delete/@veiculo.Id">
+                        Apagar
+                    </a>
+                </td>
+            </tr>
+        }
     </table>
-}
+</div>
 <a class="btn btn-primary" href="/veiculo/create">Adicionar</a>

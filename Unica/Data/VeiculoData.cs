@@ -13,7 +13,7 @@ namespace Unica.Data
         {
             SqlCommand sqlCommand = new SqlCommand();
             sqlCommand.Connection = base.DbConnection;
-            sqlCommand.CommandText = @"EXEC cadVei @placa, @descricao, @valor_diaria, @lugares, @carga, @categoria, @tipo, @status";
+            sqlCommand.CommandText = @"EXEC cadVei @placa, @descricao, @valor_diaria, @lugares, @carga, @categoria, @tipo, @status, @marca";
 
             sqlCommand.Parameters.AddWithValue("@placa", veiculo.Placa);
             sqlCommand.Parameters.AddWithValue("@descricao", veiculo.Descricao);
@@ -23,6 +23,7 @@ namespace Unica.Data
             sqlCommand.Parameters.AddWithValue("@categoria", veiculo.Categoria);
             sqlCommand.Parameters.AddWithValue("@tipo", veiculo.Tipo);
             sqlCommand.Parameters.AddWithValue("@status", veiculo.Status);
+            sqlCommand.Parameters.AddWithValue("@marca", veiculo.Marca);
 
             sqlCommand.ExecuteNonQuery();
         }
@@ -45,9 +46,10 @@ namespace Unica.Data
                     veiculo.Placa = (string)reader["placa"];
                     veiculo.Id = (int)reader["id"];
                     veiculo.Descricao = (string)reader["descricao"];
-                    veiculo.ValorDiaria = (double)reader["valor_diaria"];
+                    veiculo.Marca = (string)reader["marca"];
+                    veiculo.ValorDiaria = (decimal)reader["valor_diaria"];
                     veiculo.Lugares = (int)reader["lugares"];
-                    veiculo.Carga = (float)reader["carga"];
+                    veiculo.Carga = (int)reader["carga"];
                     veiculo.Categoria = (string)reader["categoria"];
                     veiculo.Tipo = (string)reader["tipo"];
                     veiculo.Status = (int)reader["status"];
@@ -97,10 +99,11 @@ namespace Unica.Data
                 veiculo.Placa = (string)reader["placa"];
                 veiculo.Id = (int)reader["id"];
                 veiculo.Descricao = (string)reader["descricao"];
-                veiculo.ValorDiaria = (double)reader["valor_diaria"];
+                veiculo.ValorDiaria = (decimal)reader["valor_diaria"];
                 veiculo.Lugares = (int)reader["lugares"];
-                veiculo.Carga = (float)reader["carga"];
+                veiculo.Carga = (int)reader["carga"];
                 veiculo.Categoria = (string)reader["categoria"];
+                veiculo.Marca = (string)reader["marca"];
                 veiculo.Tipo = (string)reader["tipo"];
                 veiculo.Status = (int)reader["status"];
             }
@@ -113,7 +116,7 @@ namespace Unica.Data
             sqlCommand.Connection = base.DbConnection;
 
             sqlCommand.CommandText =
-            @"EXEC altVei  @placa, @descricao,  @valor_diaria, @lugares, @carga, @categoria, @tipo, @status, @id; ";
+            @"EXEC altVei  @id, @placa, @descricao, @valor_diaria, @lugares, @carga, @categoria, @tipo, @status, @marca; ";
 
             sqlCommand.Parameters.AddWithValue("@id", veiculo.Id);
             sqlCommand.Parameters.AddWithValue("@placa", veiculo.Placa);
@@ -124,6 +127,7 @@ namespace Unica.Data
             sqlCommand.Parameters.AddWithValue("@categoria", veiculo.Categoria);
             sqlCommand.Parameters.AddWithValue("@tipo", veiculo.Tipo);
             sqlCommand.Parameters.AddWithValue("@status", veiculo.Status);
+            sqlCommand.Parameters.AddWithValue("@marca", veiculo.Marca);
             sqlCommand.ExecuteNonQuery();
         }
         public void Delete(int id)

@@ -12,11 +12,11 @@ namespace Unica.Models
 
         public string Descricao { get; set; }
 
-        public double ValorDiaria { get; set; }
+        public decimal ValorDiaria { get; set; }
 
         public int Lugares { get; set; }
 
-        public float? Carga { get; set; }
+        public int? Carga { get; set; }
 
         public string Categoria { get; set; }
 
