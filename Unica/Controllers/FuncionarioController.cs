@@ -74,7 +74,7 @@ namespace Unica.Controllers
             //Ele representa uma coleção de pares nome/valor que são submetidos
             //ao servidor durante o POST e também contém uma coleção de mensagens
             //de erros para cada calor submetido
-            funcionario.Status = StatusPessoa.Ativo;
+            funcionario.Status = 1;
             if (!ModelState.IsValid)
             {
                 return View(funcionario);

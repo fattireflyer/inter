@@ -28,7 +28,7 @@ namespace Unica.Data
             sqlCommand.Parameters.AddWithValue("@cidade", funcionario.Cidade);
             sqlCommand.Parameters.AddWithValue("@estado", funcionario.Estado);
             sqlCommand.Parameters.AddWithValue("@cep", funcionario.Cep);
-            sqlCommand.Parameters.AddWithValue("@status", 1);
+            sqlCommand.Parameters.AddWithValue("@status", funcionario.Status);
             sqlCommand.Parameters.AddWithValue("@cpf", funcionario.Cpf);
             sqlCommand.Parameters.AddWithValue("@salario", funcionario.Salario);
             sqlCommand.Parameters.AddWithValue("@cargo", funcionario.Cargo);
@@ -66,6 +66,7 @@ namespace Unica.Data
                     funcionario.Bairro = (string)reader["bairro"];
                     funcionario.Cidade = (string)reader["cidade"];
                     funcionario.Estado = (string)reader["estado"];
+                    funcionario.Status = (int)reader["status"];
                     funcionario.Cep = (string)reader["cep"];
                     funcionario.Cpf = (string)reader["cpf"];
                     funcionario.Salario = (decimal)reader["salario"];
@@ -129,6 +130,7 @@ namespace Unica.Data
                 funcionario.Cidade = (string)reader["cidade"];
                 funcionario.Salario = (decimal)reader["salario"];
                 funcionario.Estado = (string)reader["estado"];
+                funcionario.Status = (int)reader["status"];
                 funcionario.Cep = (string)reader["cep"];
                 funcionario.Cpf = (string)reader["cpf"];
                 funcionario.Cargo = (string)reader["cargo"];
@@ -164,6 +166,7 @@ namespace Unica.Data
                 funcionario.Estado = (string)reader["estado"];
                 funcionario.Cep = (string)reader["cep"];
                 funcionario.Cpf = (string)reader["cpf"];
+                funcionario.Status = (int)reader["status"];
                 funcionario.Cargo = (string)reader["cargo"];
                 funcionario.Usuario = (string)reader["usuario"];
                 funcionario.Senha = (string)reader["senha"];

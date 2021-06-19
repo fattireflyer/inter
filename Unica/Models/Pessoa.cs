@@ -19,7 +19,7 @@ namespace Unica.Models
         [Required(ErrorMessage = "Campo E-mail obrigatório")]
         [DataType(DataType.EmailAddress)]
         public string Email { get; set; }
-        public StatusPessoa Status { get; set; }
+        public int Status { get; set; }
 
 
         [Display(Name = "Logradouro")]
