@@ -13,7 +13,7 @@ namespace Unica.Models
         [Display(Name = "Salário")]
         [Required(ErrorMessage = "Campo Salário obrigatório")]
         [DataType(DataType.Currency)]
-        public double Salario { get; set;}
+        public decimal Salario { get; set; }
 
         [Display(Name = "Cargo")]
         [Required(ErrorMessage = "Campo Cargo obrigatório")]
@@ -33,5 +33,5 @@ namespace Unica.Models
         }
     }
 
-   
+
 }

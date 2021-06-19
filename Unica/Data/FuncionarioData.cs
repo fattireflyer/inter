@@ -68,7 +68,7 @@ namespace Unica.Data
                     funcionario.Estado = (string)reader["estado"];
                     funcionario.Cep = (string)reader["cep"];
                     funcionario.Cpf = (string)reader["cpf"];
-                    funcionario.Salario = (double)reader["salario"];
+                    funcionario.Salario = (decimal)reader["salario"];
                     funcionario.Cargo = (string)reader["cargo"];
 
                     lista.Add(funcionario);
@@ -127,7 +127,7 @@ namespace Unica.Data
                 funcionario.Complemento = (string)reader["complemento"];
                 funcionario.Bairro = (string)reader["bairro"];
                 funcionario.Cidade = (string)reader["cidade"];
-                funcionario.Salario = (double)reader["salario"];
+                funcionario.Salario = (decimal)reader["salario"];
                 funcionario.Estado = (string)reader["estado"];
                 funcionario.Cep = (string)reader["cep"];
                 funcionario.Cpf = (string)reader["cpf"];
@@ -160,7 +160,7 @@ namespace Unica.Data
                 funcionario.Complemento = (string)reader["complemento"];
                 funcionario.Bairro = (string)reader["bairro"];
                 funcionario.Cidade = (string)reader["cidade"];
-                funcionario.Salario = (double)reader["salario"];
+                funcionario.Salario = (decimal)reader["salario"];
                 funcionario.Estado = (string)reader["estado"];
                 funcionario.Cep = (string)reader["cep"];
                 funcionario.Cpf = (string)reader["cpf"];
