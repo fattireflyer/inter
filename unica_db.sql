@@ -312,7 +312,7 @@ go
 
 go 
 create view v_funcionarios AS
-	select p.*, f.cpf, f.cargo, f.usuario, f.senha 
+	select p.*, f.cpf, f.cargo, f.usuario, f.senha, f.salario
 		from pessoas p 
 		INNER JOIN funcionarios f ON  f.pessoa_id = p.id
 go

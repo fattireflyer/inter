@@ -49,6 +49,16 @@ namespace Unica.Controllers
             }
         }
 
+        [HttpPost]
+        public IActionResult Logout()
+        {
+
+            HttpContext.Session.Clear();
+
+            return RedirectToAction("Login", "Cliente");
+
+        }
+
 
         [HttpGet]
         public IActionResult Create()
@@ -76,11 +86,26 @@ namespace Unica.Controllers
         }
 
         [HttpGet]
-        public IActionResult Update()
+        public IActionResult Update(int id)
         {
-            return View();
+            using (var data = new FuncionarioData())
+                return View(data.ReadById(id));
         }
 
+        [HttpPost]
+        public IActionResult Update(Funcionario funcionario)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View(funcionario);
+            }
 
+            using (var data = new FuncionarioData())
+                data.Update(funcionario);
+
+            HttpContext.Session.Clear();
+            return RedirectToAction("Login", "Funcionario");
+
+        }
     }
 }
