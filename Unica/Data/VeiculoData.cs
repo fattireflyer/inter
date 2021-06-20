@@ -35,7 +35,7 @@ namespace Unica.Data
             {
                 SqlCommand sqlCommand = new SqlCommand();
                 sqlCommand.Connection = base.DbConnection;
-                sqlCommand.CommandText = @"SELECT * FROM v_veiculos";
+                sqlCommand.CommandText = @"SELECT * FROM v_veiculos where status != 2";
                 SqlDataReader reader = sqlCommand.ExecuteReader();
 
                 lista = new List<Veiculo>();
@@ -134,7 +134,7 @@ namespace Unica.Data
         {
             SqlCommand sqlCommand = new SqlCommand();
             sqlCommand.Connection = base.DbConnection;
-            sqlCommand.CommandText = @"DELETE FROM veiculos WHERE id = @id";
+            sqlCommand.CommandText = @"Update veiculos set status = 2 WHERE id = @id";
             sqlCommand.Parameters.AddWithValue("@id", id);
             sqlCommand.ExecuteNonQuery();
 

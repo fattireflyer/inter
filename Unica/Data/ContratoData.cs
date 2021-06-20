@@ -52,6 +52,12 @@ namespace Unica.Data
                 cmdReserva.Parameters.AddWithValue("@data_contratada", reserva.DataFinalContratada);
                 cmdReserva.Parameters.AddWithValue("@STATUS", 1);
                 cmdReserva.ExecuteNonQuery();
+
+                SqlCommand sqlVeiculo = new SqlCommand();
+                sqlVeiculo.Connection = base.DbConnection;
+                sqlVeiculo.CommandText = @"UPDATE veiculos set status = 0 WHERE id = @id";
+                sqlVeiculo.Parameters.AddWithValue("@id", reserva.IdVeiculo);
+                sqlVeiculo.ExecuteNonQuery();
             }
         }
 
@@ -62,7 +68,7 @@ namespace Unica.Data
             {
                 SqlCommand sqlCommand = new SqlCommand();
                 sqlCommand.Connection = base.DbConnection;
-                sqlCommand.CommandText = @"select c.*, p.nome from contratos c inner join pessoas p on p.id = c.cliente_id";
+                sqlCommand.CommandText = @"select c.*, p.nome from contratos c inner join pessoas p on p.id = c.cliente_id where c.status != 3";
                 SqlDataReader reader = sqlCommand.ExecuteReader();
 
                 lista = new List<ContratoViewModel>();
@@ -157,11 +163,36 @@ namespace Unica.Data
         {
             SqlCommand sqlCommand = new SqlCommand();
             sqlCommand.Connection = base.DbConnection;
-            sqlCommand.CommandText = @"DELETE FROM veiculos WHERE id = @id";
+            sqlCommand.CommandText = @"UPDATE contratos set status = 3 WHERE id = @id";
+            sqlCommand.Parameters.AddWithValue("@id", id);
+            sqlCommand.ExecuteNonQuery();
+        }
+
+        public void Finalizar(int id)
+        {
+            SqlCommand sqlCommand = new SqlCommand();
+            sqlCommand.Connection = base.DbConnection;
+            sqlCommand.CommandText = @"UPDATE contratos set status = 2 WHERE id = @id";
             sqlCommand.Parameters.AddWithValue("@id", id);
             sqlCommand.ExecuteNonQuery();
 
+            SqlCommand sqlVeiculo = new SqlCommand();
+            sqlVeiculo.Connection = base.DbConnection;
+            sqlVeiculo.CommandText = @"select veiculo_id from veiculos v inner join reservas r on r.veiculo_id = v.id inner join contratos c on r.contrato_id = c.id where r.contrato_id = @contrato_id";
+            sqlVeiculo.Parameters.AddWithValue("@contrato_id", id);
 
+            SqlDataReader reader = sqlVeiculo.ExecuteReader();
+
+            while (reader.Read())
+            {
+                int veiculoId = (int)reader["veiculo_id"];
+
+                SqlCommand sqlUpdate = new SqlCommand();
+                sqlUpdate.Connection = base.DbConnection;
+                sqlUpdate.CommandText = @"UPDATE veiculos set status = 1 WHERE id = @id";
+                sqlUpdate.Parameters.AddWithValue("@id", veiculoId);
+                sqlUpdate.ExecuteNonQuery();
+            }
         }
     }
 

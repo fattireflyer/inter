@@ -28,7 +28,14 @@ namespace Unica.Controllers
                 veiculos = data.Read();
             }
 
-            ViewBag.Veiculos = veiculos;
+            List<Cliente> clientes;
+            using (var data = new ClienteData())
+            {
+                clientes = data.Read();
+            }
+
+            ViewBag.Veiculos = veiculos.FindAll(value => value.Status == 1);
+            ViewBag.Clientes = clientes;
             return View();
         }
 
@@ -68,8 +75,16 @@ namespace Unica.Controllers
 
         public IActionResult Delete(int id)
         {
-            using (var data = new VeiculoData())
+            using (var data = new ContratoData())
                 data.Delete(id);
+
+            return RedirectToAction("Index");
+        }
+
+        public IActionResult Finalizar(int id)
+        {
+            using (var data = new ContratoData())
+                data.Finalizar(id);
 
             return RedirectToAction("Index");
         }

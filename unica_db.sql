@@ -56,7 +56,7 @@ create table veiculos
     categoria			varchar(50)             not null,
     tipo				varchar(50)             not null,
     status		        int,
-    check(status in (1,2)),
+    check(status in (0,1,2)),
     constraint pk_veiculo       primary key (id),          
 )
 
@@ -93,7 +93,6 @@ create table reservas
 	veiculo_id		int 		not null,
 	data_saida			datetime 		not null,
 	data_contratada datetime 		not null,
-	data_devolucao 	datetime 	not null,
 	STATUS					int,
 	check (status in (0,1)),
 	constraint pk_reservas		primary key (contrato_id, veiculo_id),
@@ -101,7 +100,7 @@ create table reservas
 	constraint fk_veiculo_id_reserva foreign key (veiculo_id)	references veiculos
 )
 
-
+drop table reservas
 
 			 
 

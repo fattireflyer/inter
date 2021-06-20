@@ -5,8 +5,13 @@
     <div class="form-row">
         <div class="form-group col-md-6">
             <label>Cnpj</label>
-            <input asp-for="ClienteCNPJ" class="form-control" />
-            <span asp-validation-for="ClienteCNPJ"></span>
+            <select asp-for="ClienteCNPJ" class="form-control">
+                <option></option>
+                @foreach (var cliente in ViewBag.Clientes)
+                {
+                    <option value="@cliente.Cnpj">@cliente.Nome - @cliente.Cnpj</option>
+                }
+            </select>
         </div>
         <div class="form-group col-md-3">
             <label>Data Inicial</label>
@@ -85,9 +90,9 @@
                     <label>Selecione o veículo:</label>
                     <select onchange="SetVeiculo(${count.value})" id="select${count.value}" class="form-control">
                         <option></option>
-                        @foreach (var veiculo in ViewBag.Veiculos)
+    @foreach (var veiculo in ViewBag.Veiculos)
     {
-                                                                                                                                                                                                                                                                        <option
+                                                                                                                                                                                                                                                                                            <option
                             value='{"id": "@veiculo.Id", "marca": "@veiculo.Marca", "descricao": "@veiculo.Descricao", "categoria": "@veiculo.Categoria", "valorDiaria": "@veiculo.ValorDiaria.ToString("F")"}'>
             @veiculo.Marca @veiculo.Descricao - @veiculo.Placa</option>
     }
