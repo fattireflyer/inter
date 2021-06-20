@@ -100,11 +100,6 @@ create table reservas
 	constraint fk_veiculo_id_reserva foreign key (veiculo_id)	references veiculos
 )
 
-drop table reservas
-
-			 
-
-
 /*	PROCEDURES */
 
 -- Cadastrar Cliente --
