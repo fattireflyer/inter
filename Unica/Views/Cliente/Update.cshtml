@@ -1,5 +1,7 @@
 ﻿@model Cliente
 
+<h2>Edição de Clientes</h2>
+<hr />
 <form asp-controller="Cliente" asp-action="Update" method="POST">
     <div class="form-row">
         <div class="form-group col-md-8">
@@ -85,5 +87,7 @@
         </div>
 
     </div>
-    <button type="submit" class="btn btn-primary">Atualizar</button>
+    <div style="margin-bottom: 40px;">
+        <button type="submit" class="btn btn-primary float-right">Atualizar</button>
+    </div>
 </form>

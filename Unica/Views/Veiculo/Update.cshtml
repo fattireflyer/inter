@@ -1,5 +1,7 @@
 ﻿@model Veiculo
 
+<h2>Edição de Veículos</h2>
+<hr />
 <form asp-controller="Veiculo" asp-action="Update" method="POST">
     <div class="form-row">
         <div class="form-group col-md-8">
@@ -52,5 +54,5 @@
             <span asp-validation-for="Status"></span>
         </div>
     </div>
-    <button type="submit" class="btn btn-primary">Salvar</button>
+    <button type="submit" class="btn btn-primary float-right">Salvar</button>
 </form>

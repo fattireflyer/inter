@@ -56,20 +56,34 @@ namespace Unica.Controllers
         [HttpGet]
         public IActionResult Update(int id)
         {
+            List<Veiculo> veiculos;
             using (var data = new VeiculoData())
-                return View(data.ReadById(id));
+            {
+                veiculos = data.Read();
+            }
+
+            List<Cliente> clientes;
+            using (var data = new ClienteData())
+            {
+                clientes = data.Read();
+            }
+
+            ViewBag.Veiculos = veiculos;
+            ViewBag.Clientes = clientes;
+            using (var data = new ContratoData())
+                return View(data.Read(id));
         }
 
         [HttpPost]
-        public IActionResult Update(Veiculo veiculo)
+        public IActionResult Update(Contrato contrato)
         {
             if (!ModelState.IsValid)
             {
-                return View(veiculo);
+                return View(contrato);
             }
 
-            using (var data = new VeiculoData())
-                data.Update(veiculo);
+            using (var data = new ContratoData())
+                data.Update(contrato);
             return RedirectToAction("Index");
         }
 

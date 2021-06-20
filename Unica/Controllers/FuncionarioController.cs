@@ -55,7 +55,7 @@ namespace Unica.Controllers
 
             HttpContext.Session.Clear();
 
-            return RedirectToAction("Login", "Cliente");
+            return RedirectToAction("Login", "Funcionario");
 
         }
 

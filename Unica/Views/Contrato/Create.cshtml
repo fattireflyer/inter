@@ -1,6 +1,7 @@
 ﻿@model Contrato
 
-
+<h2>Cadastro de Contratos</h2>
+<hr />
 <form asp-controller="Contrato" asp-action="Create" method="POST">
     <div class="form-row">
         <div class="form-group col-md-6">
@@ -35,7 +36,9 @@
     <div id="reservas">
 
     </div>
-    <button style="margin-bottom: 30px;" type="submit" class="btn btn-primary float-right">Cadastrar</button>
+    <div style="margin-bottom: 50px;">
+        <button type="submit" class="btn btn-primary float-right">Cadastrar</button>
+    </div>
 </form>
 
 <script>
@@ -92,7 +95,7 @@
                         <option></option>
     @foreach (var veiculo in ViewBag.Veiculos)
     {
-                                                                                                                                                                                                                                                                                            <option
+                                                                                                                                                                                                                                                                                                            <option
                             value='{"id": "@veiculo.Id", "marca": "@veiculo.Marca", "descricao": "@veiculo.Descricao", "categoria": "@veiculo.Categoria", "valorDiaria": "@veiculo.ValorDiaria.ToString("F")"}'>
             @veiculo.Marca @veiculo.Descricao - @veiculo.Placa</option>
     }
@@ -128,6 +131,8 @@
         content.innerHTML = ""
         let count = document.getElementById(`count`)
         count.value = 0
+        let ValoreslistaReservas = document.getElementById('ValoreslistaReservas')
+        ValoreslistaReservas.value = null
     }
 
     function ChangeObject(index, property, id) {

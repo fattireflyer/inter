@@ -103,61 +103,112 @@ namespace Unica.Data
             return lista;
         }
 
-
-        public Veiculo ReadById(int id)
+        public Contrato Read(int id)
         {
-            string idString = Convert.ToString(id);
-            return Read("id", idString);
-        }
+            Contrato contrato = new Contrato();
 
-        public Veiculo ReadbyPlaca(string placa) { return Read("placa", placa); }
-
-        private Veiculo Read(string tipo, string stringBusca)
-        {
-            Veiculo veiculo = null;
-
-            string cmdTxt = new StringBuilder("SELECT *  from v_veiculos WHERE id = @").Append(tipo).ToString();
-            SqlCommand sqlCommand = new SqlCommand(cmdTxt, base.DbConnection);
-            sqlCommand.Parameters.AddWithValue("@" + tipo, stringBusca);
-
-            SqlDataReader reader = sqlCommand.ExecuteReader();
-
-            if (reader.Read())
-            {
-                veiculo = new Veiculo();
-                veiculo.Placa = (string)reader["placa"];
-                veiculo.Id = (int)reader["id"];
-                veiculo.Descricao = (string)reader["descricao"];
-                veiculo.ValorDiaria = (decimal)reader["valor_diaria"];
-                veiculo.Lugares = (int)reader["lugares"];
-                veiculo.Carga = (int)reader["carga"];
-                veiculo.Categoria = (string)reader["categoria"];
-                veiculo.Marca = (string)reader["marca"];
-                veiculo.Tipo = (string)reader["tipo"];
-                veiculo.Status = (int)reader["status"];
-            }
-            return veiculo;
-        }
-
-        public void Update(Veiculo veiculo)
-        {
             SqlCommand sqlCommand = new SqlCommand();
             sqlCommand.Connection = base.DbConnection;
+            sqlCommand.CommandText = @"select cli.cnpj, c.data_inicial, c.data_final, r.veiculo_id, r.data_saida, r.data_contratada from veiculos v inner join reservas r on r.veiculo_id = v.id inner join contratos c on r.contrato_id = c.id inner join clientes cli on c.cliente_id = cli.pessoa_id where r.contrato_id = @contrato_id";
 
-            sqlCommand.CommandText =
-            @"EXEC altVei  @id, @placa, @descricao, @valor_diaria, @lugares, @carga, @categoria, @tipo, @status, @marca; ";
+            sqlCommand.Parameters.AddWithValue("@contrato_id", id);
 
-            sqlCommand.Parameters.AddWithValue("@id", veiculo.Id);
-            sqlCommand.Parameters.AddWithValue("@placa", veiculo.Placa);
-            sqlCommand.Parameters.AddWithValue("@descricao", veiculo.Descricao);
-            sqlCommand.Parameters.AddWithValue("@valor_diaria", veiculo.ValorDiaria);
-            sqlCommand.Parameters.AddWithValue("@lugares", veiculo.Lugares);
-            sqlCommand.Parameters.AddWithValue("@carga", veiculo.Carga);
-            sqlCommand.Parameters.AddWithValue("@categoria", veiculo.Categoria);
-            sqlCommand.Parameters.AddWithValue("@tipo", veiculo.Tipo);
-            sqlCommand.Parameters.AddWithValue("@status", veiculo.Status);
-            sqlCommand.Parameters.AddWithValue("@marca", veiculo.Marca);
+            List<Reserva> reservas = new List<Reserva>();
+
+            SqlDataReader reader = sqlCommand.ExecuteReader();
+            while (reader.Read())
+            {
+                contrato.ClienteCNPJ = (string)reader["cnpj"];
+                contrato.DataInicial = (DateTime)reader["data_inicial"];
+                contrato.DataFinal = (DateTime)reader["data_final"];
+                contrato.Id = id;
+
+                Reserva reserva = new Reserva();
+                reserva.IdContrato = id;
+                reserva.IdVeiculo = (int)reader["veiculo_id"];
+                reserva.DataRetirada = (DateTime)reader["data_saida"];
+                reserva.DataFinalContratada = (DateTime)reader["data_contratada"];
+
+                reservas.Add(reserva);
+            }
+
+            contrato.ListaReservas = JsonSerializer.Serialize<List<Reserva>>(reservas);
+
+            return contrato;
+        }
+
+        public void Update(Contrato contrato)
+        {
+            decimal valorTotal = 0;
+            List<Reserva> reservas = JsonSerializer.Deserialize<List<Reserva>>(contrato.ListaReservas);
+            foreach (var reserva in reservas)
+            {
+                valorTotal = valorTotal + reserva.Valor;
+            }
+
+            int clienteId = 0;
+            SqlCommand cmdCliente = new SqlCommand();
+            cmdCliente.Connection = base.DbConnection;
+            cmdCliente.CommandText = @"Select pessoa_id from clientes Where cnpj = @cnpj";
+            cmdCliente.Parameters.AddWithValue("@cnpj", contrato.ClienteCNPJ);
+            SqlDataReader readerCliente = cmdCliente.ExecuteReader();
+            if (readerCliente.Read())
+            {
+                clienteId = (int)readerCliente["pessoa_id"];
+            }
+
+            SqlCommand sqlCommand = new SqlCommand();
+            sqlCommand.Connection = base.DbConnection;
+            sqlCommand.CommandText = @"update contratos set valor_total = @valor_total, data_inicial = @data_inicial, cliente_id = @cliente_id, data_final = @data_final where id = @contrato_id";
+            sqlCommand.Parameters.AddWithValue("@valor_total", valorTotal);
+            sqlCommand.Parameters.AddWithValue("@data_inicial", contrato.DataInicial);
+            sqlCommand.Parameters.AddWithValue("@cliente_id", clienteId);
+            sqlCommand.Parameters.AddWithValue("@data_final", contrato.DataFinal);
+            sqlCommand.Parameters.AddWithValue("@contrato_id", contrato.Id);
             sqlCommand.ExecuteNonQuery();
+
+            SqlCommand sqlReserva = new SqlCommand();
+            sqlReserva.Connection = base.DbConnection;
+            sqlReserva.CommandText = @"select veiculo_id from veiculos v inner join reservas r on r.veiculo_id = v.id inner join contratos c on r.contrato_id = c.id where r.contrato_id = @contrato_id";
+            sqlReserva.Parameters.AddWithValue("@contrato_id", contrato.Id);
+
+            SqlDataReader reader = sqlReserva.ExecuteReader();
+
+            while (reader.Read())
+            {
+                int veiculoId = (int)reader["veiculo_id"];
+
+                SqlCommand sqlUpdate = new SqlCommand();
+                sqlUpdate.Connection = base.DbConnection;
+                sqlUpdate.CommandText = @"UPDATE veiculos set status = 1 WHERE id = @id";
+                sqlUpdate.Parameters.AddWithValue("@id", veiculoId);
+                sqlUpdate.ExecuteNonQuery();
+            }
+
+            SqlCommand sqlRemove = new SqlCommand();
+            sqlRemove.Connection = base.DbConnection;
+            sqlRemove.CommandText = @"DELETE from reservas WHERE contrato_id = @id";
+            sqlRemove.Parameters.AddWithValue("@id", contrato.Id);
+            sqlRemove.ExecuteNonQuery();
+
+            foreach (var reserva in reservas)
+            {
+                SqlCommand cmdReserva = new SqlCommand();
+                cmdReserva.Connection = base.DbConnection;
+                cmdReserva.CommandText = @"insert into reservas values(@contrato_id, @veiculo_id, @data_saida, @data_contratada, @STATUS)";
+                cmdReserva.Parameters.AddWithValue("@contrato_id", contrato.Id);
+                cmdReserva.Parameters.AddWithValue("@veiculo_id", reserva.IdVeiculo);
+                cmdReserva.Parameters.AddWithValue("@data_saida", reserva.DataRetirada);
+                cmdReserva.Parameters.AddWithValue("@data_contratada", reserva.DataFinalContratada);
+                cmdReserva.Parameters.AddWithValue("@STATUS", 1);
+                cmdReserva.ExecuteNonQuery();
+
+                SqlCommand sqlVeiculo = new SqlCommand();
+                sqlVeiculo.Connection = base.DbConnection;
+                sqlVeiculo.CommandText = @"UPDATE veiculos set status = 0 WHERE id = @id";
+                sqlVeiculo.Parameters.AddWithValue("@id", reserva.IdVeiculo);
+                sqlVeiculo.ExecuteNonQuery();
+            }
         }
         public void Delete(int id)
         {
@@ -166,6 +217,24 @@ namespace Unica.Data
             sqlCommand.CommandText = @"UPDATE contratos set status = 3 WHERE id = @id";
             sqlCommand.Parameters.AddWithValue("@id", id);
             sqlCommand.ExecuteNonQuery();
+
+            SqlCommand sqlVeiculo = new SqlCommand();
+            sqlVeiculo.Connection = base.DbConnection;
+            sqlVeiculo.CommandText = @"select veiculo_id from veiculos v inner join reservas r on r.veiculo_id = v.id inner join contratos c on r.contrato_id = c.id where r.contrato_id = @contrato_id";
+            sqlVeiculo.Parameters.AddWithValue("@contrato_id", id);
+
+            SqlDataReader reader = sqlVeiculo.ExecuteReader();
+
+            while (reader.Read())
+            {
+                int veiculoId = (int)reader["veiculo_id"];
+
+                SqlCommand sqlUpdate = new SqlCommand();
+                sqlUpdate.Connection = base.DbConnection;
+                sqlUpdate.CommandText = @"UPDATE veiculos set status = 1 WHERE id = @id";
+                sqlUpdate.Parameters.AddWithValue("@id", veiculoId);
+                sqlUpdate.ExecuteNonQuery();
+            }
         }
 
         public void Finalizar(int id)

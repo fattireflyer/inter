@@ -1,5 +1,7 @@
 ﻿@model Funcionario
 
+<h2>Edição de Funcionários</h2>
+<hr />
 <form asp-controller="Funcionario" asp-action="Update" method="POST">
     <div class="form-row">
         <div class="form-group col-md-8">
@@ -95,5 +97,7 @@
             <span asp-validation-for="Senha"></span>
         </div>
     </div>
-    <button type="submit" class="btn btn-primary">Atualizar</button>
+    <div style="margin-bottom: 50px;">
+        <button type="submit" class="btn btn-primary float-right">Atualizar</button>
+    </div>
 </form>

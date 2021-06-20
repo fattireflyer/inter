@@ -1,5 +1,7 @@
 ﻿@model Veiculo
 
+<h2>Cadastro de Veículos</h2>
+<hr />
 <form asp-controller="Veiculo" asp-action="Create" method="POST">
     <div class="form-row">
         <div class="form-group col-md-8">
@@ -47,5 +49,5 @@
             <span asp-validation-for="Tipo"></span>
         </div>
     </div>
-    <button type="submit" class="btn btn-primary">Cadastrar</button>
+    <button type="submit" class="btn btn-primary float-right">Cadastrar</button>
 </form>
