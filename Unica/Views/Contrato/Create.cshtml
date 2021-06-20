@@ -1,51 +1,154 @@
-﻿@model Veiculo
+﻿@model Contrato
 
-<form asp-controller="Veiculo" asp-action="Create" method="POST">
+
+<form asp-controller="Contrato" asp-action="Create" method="POST">
     <div class="form-row">
-        <div class="form-group col-md-8">
-            <label>Descrição</label>
-            <input asp-for="Descricao" class="form-control" />
-            <span asp-validation-for="Descricao"></span>
+        <div class="form-group col-md-6">
+            <label>Cnpj</label>
+            <input asp-for="ClienteCNPJ" class="form-control" />
+            <span asp-validation-for="ClienteCNPJ"></span>
         </div>
-        <div class="form-group col-md-4">
-            <label>Marca</label>
-            <input asp-for="Marca" class="form-control" />
-            <span asp-validation-for="Marca"></span>
+        <div class="form-group col-md-3">
+            <label>Data Inicial</label>
+            <input type="datetime-local" asp-for="DataInicial" class="form-control" />
+            <span asp-validation-for="DataInicial"></span>
+        </div>
+        <div class="form-group col-md-3">
+            <label>Data Final</label>
+            <input type="datetime-local" asp-for="DataFinal" class="form-control" />
+            <span asp-validation-for="DataFinal"></span>
         </div>
     </div>
-    <div class="form-row">
-        <div class="form-group col-md-3">
-            <label>Placa</label>
-            <input asp-for="Placa" class="form-control" />
-            <span asp-validation-for="Placa"></span>
-        </div>
-        <div class="form-group col-md-3">
-            <label>Valor Diária</label>
-            <input asp-for="ValorDiaria" class="form-control" />
-            <span asp-validation-for="ValorDiaria"></span>
-        </div>
-        <div class="form-group col-md-3">
-            <label>Lugares</label>
-            <input asp-for="Lugares" class="form-control" />
-            <span asp-validation-for="Lugares"></span>
-        </div>
-        <div class="form-group col-md-3">
-            <label>Carga</label>
-            <input asp-for="Carga" class="form-control" />
-            <span asp-validation-for="Carga"></span>
-        </div>
+    <input hidden id="count" value="0" />
+    <input hidden id="ValoreslistaReservas" asp-for="ListaReservas" />
+    <div style="display: flex; flex-direction: row;margin-bottom: 10px;">
+        <h3>Reservas</h3>
+        <button onclick="AddReserva()" type="button" style="margin-left: 10px; margin-right: 5px;"
+            class="btn btn-primary">Adicionar</button>
+        <button onclick="ResetReserva()" type="button" class="btn btn-warning">Limpar</button>
     </div>
-    <div class="form-row">
-        <div class="form-group col-md-4">
-            <label>Categoria</label>
-            <input asp-for="Categoria" class="form-control" />
-            <span asp-validation-for="Categoria"></span>
-        </div>
-        <div class="form-group col-md-4">
-            <label>Tipo</label>
-            <input asp-for="Tipo" class="form-control" />
-            <span asp-validation-for="Tipo"></span>
-        </div>
+    <div id="reservas">
+
     </div>
-    <button type="submit" class="btn btn-primary">Cadastrar</button>
+    <button style="margin-bottom: 30px;" type="submit" class="btn btn-primary float-right">Cadastrar</button>
 </form>
+
+<script>
+    function SetVeiculo(index) {
+
+        let select = document.getElementById(`select${index}`)
+        let marcaInput = document.getElementById(`Marca${index}`)
+        let descricaoInput = document.getElementById(`Descricao${index}`)
+        let categoriaInput = document.getElementById(`Categoria${index}`)
+        let valorDiariaInput = document.getElementById(`ValorDiaria${index}`)
+        marcaInput.value = JSON.parse(select.value).marca
+        descricaoInput.value = JSON.parse(select.value).descricao
+        categoriaInput.value = JSON.parse(select.value).categoria
+        valorDiariaInput.value = JSON.parse(select.value).valorDiaria
+
+        ChangeObjectWithValue(index, 'IdVeiculo', parseInt(JSON.parse(select.value).id))
+
+        let fromDate = document.getElementById(`DataRetirada${index}`).value.substr(0, 10)
+
+        let toDate = document.getElementById(`DataFinalContratada${index}`).value.substr(0, 10)
+
+        let valorDiaria = parseInt(JSON.parse(select.value).valorDiaria)
+
+        console.log(fromDate, toDate, valorDiaria)
+
+        let diferença = ((new Date(toDate) - new Date(fromDate)) / (60 * 60 * 24 * 1000))
+        console.log(diferença)
+        let valor = valorDiaria * diferença
+        console.log(valor)
+        ChangeObjectWithValue(index, 'Valor', valor)
+    }
+
+    function AddReserva() {
+        let count = document.getElementById(`count`)
+
+        let content = document.getElementById(`reservas`)
+        content.insertAdjacentHTML('beforeend', `
+        <div
+            style="border-width: 1px; border-color: #AAAAAA70; border-style: solid; border-radius: 20px; padding: 10px; margin-bottom: 10px;">
+            <div class="form-row">
+                <div class="form-group col-md-3">
+                    <label>Data Inicial</label>
+                    <input type="datetime-local" onchange="ChangeObject(${count.value}, 'DataRetirada', 'DataRetirada${count.value}')" id="DataRetirada${count.value}" class="form-control" />
+                </div>
+                <div class="form-group col-md-3">
+                    <label>Data Final</label>
+                    <input type="datetime-local" onchange="ChangeObject(${count.value}, 'DataFinalContratada', 'DataFinalContratada${count.value}')" id="DataFinalContratada${count.value}" class="form-control" />
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group col-md-4">
+                    <label>Selecione o veículo:</label>
+                    <select onchange="SetVeiculo(${count.value})" id="select${count.value}" class="form-control">
+                        <option></option>
+                        @foreach (var veiculo in ViewBag.Veiculos)
+    {
+                                                                                                                                                                                                                                                                        <option
+                            value='{"id": "@veiculo.Id", "marca": "@veiculo.Marca", "descricao": "@veiculo.Descricao", "categoria": "@veiculo.Categoria", "valorDiaria": "@veiculo.ValorDiaria.ToString("F")"}'>
+            @veiculo.Marca @veiculo.Descricao - @veiculo.Placa</option>
+    }
+                    </select>
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group col-md-3">
+                    <label>Marca</label>
+                    <input disabled id="Marca${count.value}" class="form-control" />
+                </div>
+                <div class="form-group col-md-3">
+                    <label>Descrição</label>
+                    <input disabled id="Descricao${count.value}" class="form-control" />
+                </div>
+                <div class="form-group col-md-3">
+                    <label>Categoria</label>
+                    <input disabled id="Categoria${count.value}" class="form-control" />
+                </div>
+                <div class="form-group col-md-3">
+                    <label>Valor Diaria</label>
+                    <input id="ValorDiaria${count.value}" disabled class="form-control" />
+                </div>
+            </div>
+        </div>
+        `)
+
+        count.value = parseInt(count.value) + 1
+    }
+
+    function ResetReserva() {
+        let content = document.getElementById(`reservas`)
+        content.innerHTML = ""
+        let count = document.getElementById(`count`)
+        count.value = 0
+    }
+
+    function ChangeObject(index, property, id) {
+        let ValoreslistaReservas = document.getElementById('ValoreslistaReservas')
+        let json = JSON.parse(ValoreslistaReservas.value.length > 0 ? ValoreslistaReservas.value : '[]')
+        let value = document.getElementById(id).value
+        if (json[index]) {
+            json[index][property] = value
+        }
+        else {
+            json[index] = { [property]: value }
+        }
+
+        ValoreslistaReservas.value = JSON.stringify(json)
+    }
+
+    function ChangeObjectWithValue(index, property, value) {
+        let ValoreslistaReservas = document.getElementById('ValoreslistaReservas')
+        let json = JSON.parse(ValoreslistaReservas.value.length > 0 ? ValoreslistaReservas.value : '[]')
+        if (json[index]) {
+            json[index][property] = value
+        }
+        else {
+            json[index] = { [property]: value }
+        }
+
+        ValoreslistaReservas.value = JSON.stringify(json)
+    }
+</script>

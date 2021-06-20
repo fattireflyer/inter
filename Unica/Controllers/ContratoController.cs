@@ -22,20 +22,27 @@ namespace Unica.Controllers
         [HttpGet]
         public IActionResult Create()
         {
+            List<Veiculo> veiculos;
+            using (var data = new VeiculoData())
+            {
+                veiculos = data.Read();
+            }
+
+            ViewBag.Veiculos = veiculos;
             return View();
         }
 
         [HttpPost]
-        public IActionResult Create(Veiculo veiculo)
+        public IActionResult Create(Contrato Contrato)
         {
-            veiculo.Status = 1;
+            Contrato.Status = 1;
             if (!ModelState.IsValid)
             {
-                return View(veiculo);
+                return View(Contrato);
             }
 
-            using (var data = new VeiculoData())
-                data.Create(veiculo);
+            using (var data = new ContratoData())
+                data.Create(Contrato);
             return RedirectToAction("Index");
         }
 

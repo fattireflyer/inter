@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Text;
+using System.Text.Json;
+
 
 using Unica.Models;
 
@@ -9,23 +11,48 @@ namespace Unica.Data
 {
     public class ContratoData : Data
     {
-        public void Create(Veiculo veiculo)
+        public void Create(Contrato contrato)
         {
+            decimal valorTotal = 0;
+            List<Reserva> reservas = JsonSerializer.Deserialize<List<Reserva>>(contrato.ListaReservas);
+            foreach (var reserva in reservas)
+            {
+                valorTotal = valorTotal + reserva.Valor;
+            }
+
+            int clienteId = 0;
+            SqlCommand cmdCliente = new SqlCommand();
+            cmdCliente.Connection = base.DbConnection;
+            cmdCliente.CommandText = @"Select pessoa_id from clientes Where cnpj = @cnpj";
+            cmdCliente.Parameters.AddWithValue("@cnpj", contrato.ClienteCNPJ);
+            SqlDataReader readerCliente = cmdCliente.ExecuteReader();
+            if (readerCliente.Read())
+            {
+                clienteId = (int)readerCliente["pessoa_id"];
+            }
+
             SqlCommand sqlCommand = new SqlCommand();
             sqlCommand.Connection = base.DbConnection;
-            sqlCommand.CommandText = @"EXEC cadVei @placa, @descricao, @valor_diaria, @lugares, @carga, @categoria, @tipo, @status, @marca";
+            sqlCommand.CommandText = @"insert into contratos values (@valor_total, @data_inicial, @cliente_id, @data_final, @status); SELECT SCOPE_IDENTITY();";
+            sqlCommand.Parameters.AddWithValue("@valor_total", valorTotal);
+            sqlCommand.Parameters.AddWithValue("@data_inicial", contrato.DataInicial);
+            sqlCommand.Parameters.AddWithValue("@cliente_id", clienteId);
+            sqlCommand.Parameters.AddWithValue("@data_final", contrato.DataFinal);
+            sqlCommand.Parameters.AddWithValue("@status", contrato.Status);
 
-            sqlCommand.Parameters.AddWithValue("@placa", veiculo.Placa);
-            sqlCommand.Parameters.AddWithValue("@descricao", veiculo.Descricao);
-            sqlCommand.Parameters.AddWithValue("@valor_diaria", veiculo.ValorDiaria);
-            sqlCommand.Parameters.AddWithValue("@lugares", veiculo.Lugares);
-            sqlCommand.Parameters.AddWithValue("@carga", veiculo.Carga);
-            sqlCommand.Parameters.AddWithValue("@categoria", veiculo.Categoria);
-            sqlCommand.Parameters.AddWithValue("@tipo", veiculo.Tipo);
-            sqlCommand.Parameters.AddWithValue("@status", veiculo.Status);
-            sqlCommand.Parameters.AddWithValue("@marca", veiculo.Marca);
-
-            sqlCommand.ExecuteNonQuery();
+            int idContrato = Convert.ToInt32(sqlCommand.ExecuteScalar());
+            foreach (var reserva in reservas)
+            {
+                SqlCommand cmdReserva = new SqlCommand();
+                cmdReserva.Connection = base.DbConnection;
+                cmdReserva.CommandText = @"insert into reservas values(@contrato_id, @veiculo_id, @data_saida, @data_contratada, @STATUS)";
+                cmdReserva.Parameters.AddWithValue("@contrato_id", idContrato);
+                cmdReserva.Parameters.AddWithValue("@veiculo_id", reserva.IdVeiculo);
+                cmdReserva.Parameters.AddWithValue("@data_saida", reserva.DataRetirada);
+                cmdReserva.Parameters.AddWithValue("@data_contratada", reserva.DataFinalContratada);
+                cmdReserva.Parameters.AddWithValue("@STATUS", 1);
+                cmdReserva.ExecuteNonQuery();
+            }
         }
 
         public List<ContratoViewModel> Read()

@@ -11,12 +11,9 @@ namespace Unica.Models
         public decimal ValorTotal { get; set; }
         public DateTime DataInicial { get; set; }
         public DateTime DataFinal { get; set; }
-
         public int Status { get; set; }
-
-        public int ClienteId { get; set; }
-
-        public List<Reserva> ListaReservas { get; set; }
+        public string ClienteCNPJ { get; set; }
+        public string ListaReservas { get; set; }
 
         public Contrato()
         {
