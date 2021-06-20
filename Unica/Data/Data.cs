@@ -16,6 +16,7 @@ namespace Unica.Data
             {
                 string strConexao = "Data Source = DESKTOP-RQAQ2G0; " +
                     "Initial Catalog = unica_db;" +
+                    "MultipleActiveResultSets=true;" +
                     " Integrated Security = true;";
                 // string strConexao = @"Data Source = localhost;
                 //             Initial Catalog = bdecommerce;
